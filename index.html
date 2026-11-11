@@ -1,0 +1,1382 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Que no se te vayan las luces</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bungee&family=Titan+One&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{min-height:100%;line-height:1.5}
+h1,h2,h3,p{margin:0}
+button{font-family:inherit;font-size:inherit;color:inherit}
+.topbar{position:relative;z-index:60;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px;background:#190830;color:#fff}
+body[data-theme="g1"] .topbar{background:#12203f}
+.brand{font-family:'Titan One','Arial Black',Impact,sans-serif;font-size:1rem;display:flex;align-items:center;gap:10px}
+body[data-theme="g1"] .brand{font-family:'Bungee',Impact,sans-serif;font-size:.9rem}
+.brand i{display:inline-block;width:12px;height:12px;border-radius:50%;background:#ffc400;box-shadow:16px 0 0 #e6007e,32px 0 0 #00b3c4;margin-right:32px}
+.tools{display:flex;gap:8px}
+.icon-btn{background:transparent;border:2px solid #7a5fb0;color:#fff;border-radius:999px;padding:4px 14px;cursor:pointer;font-size:.875rem;font-family:'Atkinson Hyperlegible',system-ui,sans-serif}
+.icon-btn:hover{border-color:#ffc400}
+.icon-btn[hidden]{display:none}
+.icon-btn:focus-visible{outline:3px solid #ffc400;outline-offset:3px}
+.flagrow{height:18px;background:linear-gradient(90deg,#e6007e 0 25%,#ffc400 25% 50%,#00b3c4 50% 75%,#ff6a13 75%)}
+.tapebar{height:10px;display:none;background:repeating-linear-gradient(45deg,#ffd21f 0 12px,#12203f 12px 24px)}
+body[data-theme="g1"] .flagrow{display:none}
+body[data-theme="g1"] .tapebar{display:block}
+#app{max-width:980px;margin:0 auto;padding:20px 16px 48px}
+/* menu */
+.hub h1{font-family:'Titan One','Arial Black',Impact,sans-serif;font-size:clamp(2.2rem,7vw,4rem);line-height:1;text-transform:uppercase;margin:8px 0 12px}
+.hub h1 span{color:#ffc400}
+.hub .kicker{font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.1em;color:#ffc400}
+.hub .lead{font-size:1.12rem;max-width:56ch;color:#efe7ff}
+.hubgrid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:28px}
+.hubcard{background:#fff;color:#24103f;border:3px solid #24103f;border-radius:22px;overflow:hidden;box-shadow:0 7px 0 #14072a;display:flex;flex-direction:column}
+.hubcard .strip{height:16px}
+.hubcard.a1 .strip{background:linear-gradient(90deg,#e6007e 0 25%,#ffc400 25% 50%,#00b3c4 50% 75%,#ff6a13 75%)}
+.hubcard.a2 .strip{background:repeating-linear-gradient(45deg,#ffd21f 0 12px,#12203f 12px 24px)}
+.hubcard .body{padding:18px;display:flex;flex-direction:column;gap:12px;flex:1}
+.hubcard .num{font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#5b4a7a}
+.hubcard h2{font-family:'Titan One','Arial Black',Impact,sans-serif;font-weight:400;font-size:1.6rem;line-height:1.05;text-transform:uppercase}
+.hubcard.a2 h2{font-family:'Bungee',Impact,sans-serif;font-size:1.4rem}
+.hubcard .art{display:grid;place-items:center;height:150px;border-radius:14px}
+.hubcard.a1 .art{background:#2a0f4a}
+.hubcard.a2 .art{background:#eaf4ff}
+.hubcard .art svg{height:130px;width:auto}
+.hubcard ul{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:8px}
+.hubcard li{font-size:.8rem;font-weight:700;border:2px solid #24103f;border-radius:999px;padding:2px 10px;background:#fff7cc}
+.hbtn{margin-top:auto;display:inline-flex;align-items:center;justify-content:center;border:3px solid #24103f;background:#ffc400;color:#24103f;font-family:'Titan One','Arial Black',Impact,sans-serif;font-size:1.05rem;padding:12px 24px;border-radius:999px;cursor:pointer;box-shadow:0 5px 0 #24103f;transition:transform .08s,box-shadow .08s}
+.hbtn:hover{transform:translateY(-1px)}
+.hbtn:active{transform:translateY(4px);box-shadow:0 1px 0 #24103f}
+.hbtn:focus-visible{outline:3px solid #24103f;outline-offset:3px}
+.hub .foot{margin-top:26px;color:#cfc0ee;font-size:.9rem;max-width:80ch}
+@media (max-width:760px){.hubgrid{grid-template-columns:1fr}}
+.icon-btn{white-space:nowrap}
+.brand span{line-height:1.1}
+@media (max-width:520px){.brand i{display:none}.brand{font-size:.85rem}body[data-theme="g1"] .brand{font-size:.78rem}.icon-btn{padding:4px 10px;font-size:.8rem}.topbar{padding:10px 12px}}
+.g1,.g2{display:block}
+.g1 :focus-visible{outline:3px solid #12203f;outline-offset:3px;border-radius:6px}
+.g2 :focus-visible{outline:3px solid #ffc400;outline-offset:3px;border-radius:8px}
+.g1{
+  --ink:#12203f;
+  --volt:#ffd21f;
+  --alert:#e8392a;
+  --safe:#0f9b80;
+  --paper:#eaf4ff;
+  --card:#ffffff;
+  --muted:#4a5878;
+  --line:#c9d6ea;
+  --font-display:'Bungee',Impact,'Arial Black',sans-serif;
+  --font-body:'Atkinson Hyperlegible',system-ui,-apple-system,'Segoe UI',sans-serif;
+  color-scheme:light;
+}
+.g1 *{box-sizing:border-box}
+body[data-theme="g1"]{background:#eaf4ff;color:#12203f;font-family:'Atkinson Hyperlegible',system-ui,-apple-system,'Segoe UI',sans-serif;font-size:1.0625rem;line-height:1.5;
+  background-image:radial-gradient(circle at 1px 1px,#c9dbf2 1px,transparent 0);background-size:22px 22px;min-height:100%}
+.g1 h1,.g1 h2,.g1 h3{margin:0;text-wrap:balance}
+.g1 p{margin:0}
+.g1 button{font-family:inherit;font-size:inherit;color:inherit}
+.g1 :focus-visible{outline:3px solid var(--ink);outline-offset:3px;border-radius:6px}
+.g1 .tape{background:repeating-linear-gradient(45deg,var(--volt) 0 12px,var(--ink) 12px 24px)}
+.g1 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:3px solid var(--ink);background:var(--volt);color:var(--ink);
+  font-family:var(--font-display);font-size:1rem;letter-spacing:.02em;padding:12px 22px;border-radius:12px;cursor:pointer;box-shadow:0 5px 0 var(--ink);
+  transition:transform .08s,box-shadow .08s}
+.g1 .btn:hover{transform:translateY(-1px)}
+.g1 .btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--ink)}
+.g1 .btn-ghost{background:#fff;font-size:.85rem;padding:8px 14px;box-shadow:0 3px 0 var(--ink)}
+.g1 .btn-ghost[disabled]{opacity:.45;cursor:not-allowed}
+.g1 .btn-dark{background:var(--ink);color:#fff}
+.g1 .btn-row{display:flex;flex-wrap:wrap;gap:14px;margin-top:20px}
+.g1 .hero{display:grid;grid-template-columns:1.25fr 1fr;gap:28px;align-items:center}
+.g1 .kicker{font-weight:700;font-size:.875rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.g1 .hero h1{font-family:var(--font-display);font-size:clamp(2rem,6vw,3.6rem);line-height:1.02;margin:8px 0 14px;text-transform:uppercase}
+.g1 .lit{background:var(--volt);padding:0 .15em;box-decoration-break:clone;-webkit-box-decoration-break:clone;border-radius:6px}
+.g1 .lead{font-size:1.15rem;max-width:56ch}
+.g1 .panel{background:var(--card);border:3px solid var(--ink);border-radius:16px;padding:18px;box-shadow:0 6px 0 var(--ink)}
+.g1 .form{margin-top:20px;display:grid;gap:16px}
+.g1 .field label.lbl{display:block;font-weight:700;margin-bottom:6px}
+.g1 .field input[type=text]{width:100%;padding:12px 14px;font:inherit;border:3px solid var(--ink);border-radius:10px;background:#fff}
+.g1 .modes{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g1 .mode{position:relative}
+.g1 .mode input{position:absolute;opacity:0;inset:0;cursor:pointer}
+.g1 .mode span{display:block;border:3px solid var(--line);border-radius:12px;padding:12px;background:#fff;height:100%}
+.g1 .mode b{display:block;font-family:var(--font-display);font-size:.95rem}
+.g1 .mode small{color:var(--muted);font-size:.875rem;display:block;margin-top:2px}
+.g1 .mode input:checked + span{border-color:var(--ink);background:#fff7cc;box-shadow:0 4px 0 var(--ink)}
+.g1 .mode input:focus-visible + span{outline:3px solid var(--ink);outline-offset:3px}
+.g1 .hero-art{display:flex;flex-direction:column;align-items:center;gap:14px}
+.g1 .glow{position:relative;width:min(260px,60vw);aspect-ratio:1;display:grid;place-items:center}
+.g1 .glow::before{content:"";position:absolute;inset:-6%;border-radius:50%;background:radial-gradient(circle,#ffe66b 0%,rgba(255,230,107,.0) 68%);animation:pulse 2.6s ease-in-out infinite}
+.g1 .chispa{position:relative;width:78%;height:auto;display:block}
+.g1 .bubble{background:#fff;border:3px solid var(--ink);border-radius:16px;padding:12px 16px;max-width:34ch;position:relative;text-align:center}
+.g1 .bubble::before{content:"";position:absolute;top:-12px;left:50%;margin-left:-10px;border:10px solid transparent;border-bottom-color:var(--ink);border-top:0}
+.g1 .how{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:32px}
+.g1 .how .panel{box-shadow:0 4px 0 var(--ink)}
+.g1 .how .n{font-family:var(--font-display);background:var(--ink);color:var(--volt);width:32px;height:32px;border-radius:50%;display:grid;place-items:center;margin-bottom:8px}
+.g1 .how h3{font-family:var(--font-display);font-size:1rem;margin-bottom:4px}
+.g1 .foot{margin-top:28px;color:var(--muted);font-size:.9rem;max-width:80ch}
+.g1 .intro{max-width:640px;margin:10px auto 0}
+.g1 .intro h2,.g1 .result h2,.g1 .quiz h2{font-family:var(--font-display);font-size:clamp(1.5rem,4.5vw,2.2rem);text-transform:uppercase;line-height:1.1}
+.g1 .pill{display:inline-block;background:var(--ink);color:var(--volt);font-family:var(--font-display);font-size:.8rem;padding:4px 12px;border-radius:999px;margin-bottom:10px}
+.g1 .intro ul{padding-left:20px;margin:12px 0 0}
+.g1 .tip{display:flex;gap:12px;align-items:center;margin-top:16px;background:#fff7cc;border:3px solid var(--ink);border-radius:14px;padding:10px 14px}
+.g1 .tip svg{width:48px;height:auto;flex:none}
+.g1 .hud{display:grid;grid-template-columns:auto auto 1fr auto;gap:10px 16px;align-items:center;margin-bottom:12px}
+.g1 .hud-level{display:flex;flex-direction:column;line-height:1.15}
+.g1 .hud-level .lv{font-size:.8rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.g1 .hud-level strong{font-family:var(--font-display);font-size:1.05rem}
+.g1 .bulbs{display:flex;gap:4px}
+.g1 .bulb{width:26px;height:32px;color:var(--volt);transition:color .3s}
+.g1 .bulb path,.g1 .bulb rect{stroke:var(--ink);stroke-width:1.6}
+.g1 .bulb.off{color:#cfd7e6}
+.g1 .found{font-weight:700;text-align:right}
+.g1 .found b{font-family:var(--font-display);font-size:1.2rem}
+.g1 .clockrow{grid-column:1 / -1;display:flex;align-items:center;gap:10px}
+.g1 .clock-bar{flex:1;height:14px;border:3px solid var(--ink);border-radius:999px;background:#fff;overflow:hidden}
+.g1 .clock-bar i{display:block;height:100%;width:100%;background:var(--safe);transition:width .2s linear,background .3s}
+.g1 .clock-bar i.low{background:var(--alert)}
+.g1 #clockT{font-family:var(--font-display);min-width:3.2ch;text-align:right}
+.g1 .sceneframe{padding:10px;border-radius:16px;border:3px solid var(--ink)}
+.g1 #scene{display:block;width:100%;height:auto;border-radius:8px;background:#fff;touch-action:manipulation}
+.g1 .spot{cursor:pointer}
+.g1 .spot:focus-visible{outline:none}
+.g1 .spot:focus-visible .ring{opacity:1;stroke:var(--ink);stroke-dasharray:6 5}
+.g1 .mark{opacity:0;transition:opacity .25s}
+.g1 .ring{fill:rgba(15,155,128,.12);stroke:var(--safe);stroke-width:4;stroke-dasharray:8 6}
+.g1 .badge circle{fill:var(--safe);stroke:#fff;stroke-width:3}
+.g1 .badge path{stroke:#fff;stroke-width:4;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.g1 .spot.found .mark{opacity:1}
+.g1 .spot.flag .mark{opacity:1}
+.g1 .spot.flag .ring{stroke:#2b6fe0;fill:rgba(43,111,224,.1)}
+.g1 .spot.flag .badge circle{fill:#2b6fe0}
+.g1 .spot.hint .mark{opacity:1}
+.g1 .spot.hint .badge{opacity:0}
+.g1 .spot.hint .ring{stroke:var(--alert);fill:rgba(232,57,42,.12);animation:pulseRing 0.9s ease-in-out infinite}
+.g1 .ripple{fill:none;stroke:var(--ink);stroke-width:3;animation:rip .6s ease-out forwards;pointer-events:none}
+.g1 .scenehelp{margin-top:10px;color:var(--muted);font-size:.95rem}
+.g1 .sheet{position:fixed;inset:0;background:rgba(18,32,63,.6);display:flex;align-items:flex-end;justify-content:center;padding:12px;z-index:50}
+.g1 .sheet[hidden]{display:none}
+.g1 .sheet-card{background:#fff;border:3px solid var(--ink);border-radius:18px;max-width:560px;width:100%;max-height:92vh;overflow:auto;box-shadow:0 8px 0 var(--ink)}
+.g1 .sheet-top{padding:8px 18px;font-family:var(--font-display);font-size:.85rem;display:flex;justify-content:space-between;gap:10px}
+.g1 .sheet-top.good{background:var(--volt);color:var(--ink)}
+.g1 .sheet-top.info{background:#2b6fe0;color:#fff}
+.g1 .sheet-body{padding:16px 18px 20px;display:grid;gap:12px}
+.g1 .sheet-body h3{font-family:var(--font-display);font-size:1.3rem;line-height:1.1;text-transform:uppercase}
+.g1 .sheet-body h4{margin:0 0 2px;font-size:.8rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.g1 .box-do{background:#e2f6f1;border:3px solid var(--safe);border-radius:12px;padding:10px 14px}
+.g1 .box-do h4{color:var(--safe)}
+.g1 .box-tech{border:3px dashed var(--ink);border-radius:12px;padding:10px 14px;background:#f5f8ff}
+.g1 .result{max-width:720px;margin:0 auto}
+.g1 .result-head{padding:18px;border:3px solid var(--ink);border-radius:16px;background:#fff;box-shadow:0 6px 0 var(--ink)}
+.g1 .result-head.win{background:#fff7cc}
+.g1 .result-head.lost{background:#ffe1dc}
+.g1 .stars{display:flex;gap:6px;margin:14px 0}
+.g1 .stars svg{width:44px;height:44px}
+.g1 .stars .on{fill:var(--volt);stroke:var(--ink);stroke-width:2.5}
+.g1 .stars .off{fill:#dfe5f0;stroke:#9aa7c0;stroke-width:2.5}
+.g1 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:6px 0 18px}
+.g1 .stats div{background:#fff;border:3px solid var(--ink);border-radius:12px;padding:8px 12px;text-align:center}
+.g1 .stats b{display:block;font-family:var(--font-display);font-size:1.4rem}
+.g1 .stats span{font-size:.85rem;color:var(--muted)}
+.g1 .review{list-style:none;padding:0;margin:10px 0 0;display:grid;gap:10px}
+.g1 .review details{background:#fff;border:3px solid var(--ink);border-radius:12px;padding:10px 14px}
+.g1 .review summary{cursor:pointer;font-weight:700;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.g1 .review p{margin-top:8px}
+.g1 .chip{font-size:.75rem;font-weight:700;border-radius:999px;padding:2px 10px;border:2px solid var(--ink)}
+.g1 .chip.ok{background:#c9f0e6}
+.g1 .chip.miss{background:#ffd3cc}
+.g1 h3.sec{font-family:var(--font-display);font-size:1.1rem;margin-top:22px;text-transform:uppercase}
+.g1 .quiz{max-width:720px;margin:0 auto}
+.g1 .progress{height:14px;border:3px solid var(--ink);border-radius:999px;background:#fff;overflow:hidden;margin:12px 0 18px}
+.g1 .progress i{display:block;height:100%;background:var(--volt);border-right:3px solid var(--ink)}
+.g1 .qtext{font-size:1.25rem;font-weight:700;margin-bottom:14px}
+.g1 .opts{display:grid;gap:10px}
+.g1 .opt{display:flex;gap:12px;align-items:flex-start;text-align:left;background:#fff;border:3px solid var(--ink);border-radius:12px;padding:12px 14px;cursor:pointer;width:100%}
+.g1 .opt:hover{background:#fff7cc}
+.g1 .opt .k{font-family:var(--font-display);background:var(--ink);color:var(--volt);min-width:30px;height:30px;border-radius:8px;display:grid;place-items:center;flex:none}
+.g1 .opt.right{background:#c9f0e6;border-color:var(--safe)}
+.g1 .opt.wrong{background:#ffd3cc;border-color:var(--alert)}
+.g1 .opt[disabled]{cursor:default}
+.g1 .explain{margin-top:14px}
+.g1 .diploma{border:6px double var(--ink);background:#fffdf0;border-radius:6px;padding:24px 18px;text-align:center;box-shadow:0 6px 0 var(--ink)}
+.g1 .diploma .small{font-size:.85rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+.g1 .diploma .name{font-family:var(--font-display);font-size:clamp(1.6rem,5vw,2.4rem);margin:6px 0;line-height:1.1;overflow-wrap:anywhere}
+.g1 .diploma .rank{display:inline-block;background:var(--ink);color:var(--volt);font-family:var(--font-display);padding:6px 16px;border-radius:999px;margin:10px 0}
+.g1 .diploma svg{width:70px;height:auto;margin:0 auto 6px;display:block}
+.g1 .copybox{width:100%;margin-top:10px;font:inherit;padding:10px;border:3px solid var(--ink);border-radius:10px;min-height:80px}
+.g1 .copymsg{margin-top:8px;font-weight:700;color:var(--safe)}
+@keyframes pulse{0%,100%{transform:scale(.96);opacity:.8}50%{transform:scale(1.06);opacity:1}}
+@keyframes pulseRing{0%,100%{opacity:.35}50%{opacity:1}}
+@keyframes rip{from{r:4;opacity:.9}to{r:34;opacity:0}}
+@media (prefers-reduced-motion:reduce){.g1 *{animation:none!important;transition:none!important}}
+@media (max-width:760px){.g1 .hero{grid-template-columns:1fr}
+.g1 .hero-art{order:-1}
+.g1 .glow{width:min(170px,50vw)}
+.g1 .how{grid-template-columns:1fr}
+.g1 .hud{grid-template-columns:1fr auto}
+.g1 .hud-level{grid-column:1}
+.g1 .bulbs{grid-column:2;justify-self:end}
+.g1 .found{text-align:left}
+.g1 .modes{grid-template-columns:1fr}}
+.g2{
+  --night:#2a0f4a;
+  --night2:#3d1768;
+  --magenta:#e6007e;
+  --turq:#00b3c4;
+  --sun:#ffc400;
+  --orange:#ff6a13;
+  --card:#ffffff;
+  --ink:#24103f;
+  --muted:#5b4a7a;
+  --font-display:'Titan One','Arial Black',Impact,sans-serif;
+  --font-body:'Atkinson Hyperlegible',system-ui,-apple-system,'Segoe UI',sans-serif;
+  color-scheme:light;
+}
+.g2 *{box-sizing:border-box}
+body[data-theme="g2"],body[data-theme="hub"]{background:#2a0f4a;color:#fff;font-family:'Atkinson Hyperlegible',system-ui,-apple-system,'Segoe UI',sans-serif;font-size:1.0625rem;line-height:1.5;min-height:100%;
+  background-image:
+   radial-gradient(circle at 12% 18%,#e6007e 0 3px,transparent 4px),
+   radial-gradient(circle at 78% 12%,#ffc400 0 3px,transparent 4px),
+   radial-gradient(circle at 40% 70%,#00b3c4 0 3px,transparent 4px),
+   radial-gradient(circle at 90% 80%,#ff6a13 0 3px,transparent 4px);
+  background-size:260px 260px,310px 310px,230px 230px,290px 290px}
+.g2 h1,.g2 h2,.g2 h3{margin:0;text-wrap:balance}
+.g2 p{margin:0}
+.g2 button{font-family:inherit;font-size:inherit;color:inherit}
+.g2 :focus-visible{outline:3px solid var(--sun);outline-offset:3px;border-radius:8px}
+.g2 .card :focus-visible,.g2 .sheet-card :focus-visible{outline-color:var(--ink)}
+.g2 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:3px solid var(--ink);background:var(--sun);color:var(--ink);
+  font-family:var(--font-display);font-size:1.05rem;padding:12px 24px;border-radius:999px;cursor:pointer;box-shadow:0 5px 0 var(--ink);transition:transform .08s,box-shadow .08s}
+.g2 .btn:hover{transform:translateY(-1px)}
+.g2 .btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--ink)}
+.g2 .btn-alt{background:#fff;font-size:.9rem;padding:9px 18px;box-shadow:0 3px 0 var(--ink)}
+.g2 .btn-row{display:flex;flex-wrap:wrap;gap:14px;margin-top:18px}
+.g2 .card{background:var(--card);color:var(--ink);border:3px solid var(--ink);border-radius:20px;padding:18px;box-shadow:0 6px 0 #14072a}
+.g2 .hero{display:grid;grid-template-columns:1.2fr 1fr;gap:28px;align-items:center}
+.g2 .kicker{font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.1em;color:var(--sun)}
+.g2 .hero h1{font-family:var(--font-display);font-size:clamp(2.4rem,8vw,4.6rem);line-height:.98;margin:8px 0 6px;text-transform:uppercase;letter-spacing:.01em}
+.g2 .hero h1 span{color:var(--sun)}
+.g2 .sub{font-family:var(--font-display);font-size:1.2rem;color:var(--turq);margin-bottom:12px}
+.g2 .lead{font-size:1.12rem;max-width:56ch;color:#efe7ff}
+.g2 .form{margin-top:20px;display:grid;gap:16px}
+.g2 .lbl{display:block;font-weight:700;margin-bottom:6px}
+.g2 .field input[type=text]{width:100%;padding:12px 14px;font:inherit;border:3px solid var(--ink);border-radius:12px;background:#fff;color:var(--ink)}
+.g2 .modes{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g2 .mode{position:relative;color:var(--ink)}
+.g2 .mode input{position:absolute;opacity:0;inset:0;cursor:pointer}
+.g2 .mode > span{display:block;border:3px solid #cdbfe8;border-radius:14px;padding:12px;background:#fff;height:100%}
+.g2 .mode b{display:block;font-family:var(--font-display);font-size:1rem;font-weight:400}
+.g2 .mode small{color:var(--muted);font-size:.875rem;display:block;margin-top:2px}
+.g2 .mode .row{display:flex;gap:10px;align-items:center}
+.g2 .mode .row svg{width:46px;height:auto;flex:none}
+.g2 .mode input:checked + span{border-color:var(--magenta);background:#ffe9f4;box-shadow:0 4px 0 var(--magenta)}
+.g2 .mode input:focus-visible + span{outline:3px solid var(--sun);outline-offset:3px}
+.g2 .hero-art{display:flex;flex-direction:column;align-items:center;gap:14px}
+.g2 .glow{position:relative;width:min(300px,64vw);aspect-ratio:1;display:grid;place-items:center}
+.g2 .glow::before{content:"";position:absolute;inset:-8%;border-radius:50%;background:radial-gradient(circle,rgba(255,196,0,.6) 0%,rgba(255,196,0,0) 68%);animation:pulse 2.6s ease-in-out infinite}
+.g2 .chispa{position:relative;width:88%;height:auto;display:block;animation:sway 2.2s ease-in-out infinite;transform-origin:50% 90%}
+.g2 .bubble{background:#fff;color:var(--ink);border:3px solid var(--ink);border-radius:18px;padding:12px 16px;max-width:34ch;position:relative;text-align:center}
+.g2 .bubble::before{content:"";position:absolute;top:-12px;left:50%;margin-left:-10px;border:10px solid transparent;border-bottom-color:var(--ink);border-top:0}
+.g2 .how{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:34px}
+.g2 .how .card{box-shadow:0 4px 0 #14072a}
+.g2 .how .n{font-family:var(--font-display);background:var(--magenta);color:#fff;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;margin-bottom:8px}
+.g2 .how h3{font-family:var(--font-display);font-weight:400;font-size:1.1rem;margin-bottom:4px}
+.g2 .foot{margin-top:26px;color:#cfc0ee;font-size:.9rem;max-width:80ch}
+.g2 .stage{max-width:440px;margin:0 auto}
+.g2 .hud{display:grid;grid-template-columns:1fr auto 1fr;gap:8px 12px;align-items:center;margin-bottom:10px}
+.g2 .hud .tramo{line-height:1.15}
+.g2 .hud .tramo small{display:block;font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:#cfc0ee}
+.g2 .hud .tramo b{font-family:var(--font-display);font-weight:400;font-size:1rem}
+.g2 .bulbs{display:flex;gap:3px;justify-content:center}
+.g2 .bulb{width:24px;height:30px;color:var(--sun);transition:color .3s}
+.g2 .bulb.off{color:#5b4580}
+.g2 .hud .stat{text-align:right;font-size:.9rem;line-height:1.2}
+.g2 .hud .stat b{font-family:var(--font-display);font-weight:400;font-size:1.05rem;color:var(--sun)}
+.g2 .canvaswrap{position:relative;border:4px solid #fff;border-radius:18px;overflow:hidden;background:#14072a;box-shadow:0 0 0 4px var(--magenta)}
+.g2 #cv{display:block;width:100%;height:auto;aspect-ratio:400/640;touch-action:none;max-height:calc(100vh - 250px);margin:0 auto}
+.g2 .toast{position:absolute;left:10px;right:10px;top:34px;background:#fff;color:var(--ink);border:3px solid var(--ink);border-radius:14px;padding:8px 12px;font-size:.92rem;line-height:1.3;opacity:0;transform:translateY(-8px);transition:opacity .2s,transform .2s;pointer-events:none}
+.g2 .toast.on{opacity:1;transform:none}
+.g2 .toast b{color:var(--magenta)}
+.g2 .controls{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;margin-top:12px;align-items:center}
+.g2 .arrow{background:var(--sun);color:var(--ink);border:3px solid var(--ink);border-radius:18px;height:58px;font-family:var(--font-display);font-size:1.6rem;cursor:pointer;box-shadow:0 5px 0 var(--ink);touch-action:manipulation}
+.g2 .arrow:active{transform:translateY(4px);box-shadow:0 1px 0 var(--ink)}
+.g2 .help{margin-top:10px;color:#cfc0ee;font-size:.9rem;text-align:center}
+.g2 .sheet{position:fixed;inset:0;background:rgba(20,7,42,.72);display:flex;align-items:flex-end;justify-content:center;padding:12px;z-index:50}
+.g2 .sheet[hidden]{display:none}
+.g2 .sheet-card{background:#fff;color:var(--ink);border:3px solid var(--ink);border-radius:20px;max-width:580px;width:100%;max-height:94vh;overflow:auto;box-shadow:0 8px 0 #14072a}
+.g2 .sheet-top{padding:8px 18px;font-family:var(--font-display);font-size:.9rem;background:var(--magenta);color:#fff;border-radius:16px 16px 0 0;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.g2 .sheet-top.ok{background:var(--turq)}
+.g2 .sheet-top.bad{background:var(--orange)}
+.g2 .sheet-body{padding:16px 18px 20px;display:grid;gap:12px}
+.g2 .sheet-body h3{font-family:var(--font-display);font-weight:400;font-size:1.35rem;line-height:1.1;text-transform:uppercase}
+.g2 .sheet-body h4{margin:0 0 2px;font-size:.8rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.g2 .scn{display:flex;gap:12px;align-items:flex-start}
+.g2 .scn svg{width:54px;height:auto;flex:none}
+.g2 .opts{display:grid;gap:10px}
+.g2 .opt{display:flex;gap:12px;align-items:flex-start;text-align:left;background:#fff;border:3px solid var(--ink);border-radius:14px;padding:11px 14px;cursor:pointer;width:100%;color:var(--ink)}
+.g2 .opt:hover{background:#fff3c4}
+.g2 .opt .k{font-family:var(--font-display);background:var(--ink);color:var(--sun);min-width:30px;height:30px;border-radius:50%;display:grid;place-items:center;flex:none}
+.g2 .opt.right{background:#c8f3f6;border-color:var(--turq)}
+.g2 .opt.wrong{background:#ffd8c2;border-color:var(--orange)}
+.g2 .opt[disabled]{cursor:default}
+.g2 .box-do{background:#e5f8fa;border:3px solid var(--turq);border-radius:14px;padding:10px 14px}
+.g2 .box-do h4{color:#00727d}
+.g2 .box-tech{border:3px dashed var(--ink);border-radius:14px;padding:10px 14px;background:#f7f2ff}
+.g2 .result{max-width:720px;margin:0 auto}
+.g2 .result h2{font-family:var(--font-display);font-weight:400;font-size:clamp(1.6rem,5vw,2.4rem);text-transform:uppercase;line-height:1.05}
+.g2 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}
+.g2 .stats div{background:#fff;color:var(--ink);border:3px solid var(--ink);border-radius:14px;padding:8px 12px;text-align:center}
+.g2 .stats b{display:block;font-family:var(--font-display);font-weight:400;font-size:1.4rem}
+.g2 .stats span{font-size:.85rem;color:var(--muted)}
+.g2 .diploma{background:#fffdf3;color:var(--ink);border:6px double var(--ink);border-radius:8px;padding:24px 18px;text-align:center;box-shadow:0 6px 0 #14072a}
+.g2 .diploma .small{font-size:.85rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+.g2 .diploma .name{font-family:var(--font-display);font-size:clamp(1.7rem,5vw,2.6rem);margin:6px 0;line-height:1.1;overflow-wrap:anywhere;color:var(--magenta)}
+.g2 .diploma .rank{display:inline-block;background:var(--ink);color:var(--sun);font-family:var(--font-display);padding:6px 18px;border-radius:999px;margin:10px 0}
+.g2 .diploma .chispa{width:110px;animation:none;margin:0 auto}
+.g2 h3.sec{font-family:var(--font-display);font-weight:400;font-size:1.2rem;margin:26px 0 8px;text-transform:uppercase;color:var(--sun)}
+.g2 .review{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.g2 .review details{background:#fff;color:var(--ink);border:3px solid var(--ink);border-radius:14px;padding:10px 14px}
+.g2 .review summary{cursor:pointer;font-weight:700;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.g2 .review p{margin-top:8px}
+.g2 .chip{font-size:.75rem;font-weight:700;border-radius:999px;padding:2px 10px;border:2px solid var(--ink)}
+.g2 .chip.ok{background:#c8f3f6}
+.g2 .chip.miss{background:#ffd8c2}
+.g2 .copybox{width:100%;margin-top:10px;font:inherit;padding:10px;border:3px solid var(--ink);border-radius:12px;min-height:80px;color:var(--ink)}
+.g2 .copymsg{margin-top:8px;font-weight:700;color:var(--turq)}
+.g2 .panel-w{background:#fff;color:var(--ink);border:3px solid var(--ink);border-radius:16px;padding:12px 16px}
+@keyframes pulse{0%,100%{transform:scale(.96);opacity:.8}50%{transform:scale(1.06);opacity:1}}
+@keyframes sway{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+@media (prefers-reduced-motion:reduce){.g2 *{animation:none!important;transition:none!important}}
+@media (max-width:760px){.g2 .hero{grid-template-columns:1fr}
+.g2 .hero-art{order:-1}
+.g2 .glow{width:min(190px,52vw)}
+.g2 .how{grid-template-columns:1fr}
+.g2 .modes{grid-template-columns:1fr}}
+</style>
+</head>
+<body data-theme="hub">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="chispa1" viewBox="0 0 120 152">
+      <path d="M60 8C28 8 10 32 10 58c0 20 12 32 20 46 4 7 4 14 4 20h52c0-6 0-13 4-20 8-14 20-26 20-46C110 32 92 8 60 8Z" fill="#ffd21f" stroke="#12203f" stroke-width="6" stroke-linejoin="round"/>
+      <rect x="34" y="124" width="52" height="11" rx="4" fill="#9aa5b8" stroke="#12203f" stroke-width="5"/>
+      <rect x="40" y="136" width="40" height="10" rx="4" fill="#9aa5b8" stroke="#12203f" stroke-width="5"/>
+      <circle cx="45" cy="58" r="8" fill="#12203f"/><circle cx="75" cy="58" r="8" fill="#12203f"/>
+      <circle cx="48" cy="55" r="2.6" fill="#fff"/><circle cx="78" cy="55" r="2.6" fill="#fff"/>
+      <circle cx="33" cy="76" r="7" fill="#ff8a6b" opacity=".75"/><circle cx="87" cy="76" r="7" fill="#ff8a6b" opacity=".75"/>
+      <path d="M46 78Q60 92 74 78" fill="none" stroke="#12203f" stroke-width="5" stroke-linecap="round"/>
+      <path d="M46 106l7-12 7 12 7-12 7 12" fill="none" stroke="#e08a00" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+<symbol id="bulbico1" viewBox="0 0 24 30"><path d="M12 2C6.500 2 3 6 3 10.500c0 3 1.700 4.700 3 6.500.600.900.900 1.700.900 2.800h8.200c0-1.100.300-1.900.900-2.800 1.300-1.800 3-3.500 3-6.500C21 6 17.500 2 12 2Z" fill="currentColor"/><rect x="8" y="21.500" width="8" height="3" rx="1" fill="#9aa5b8"/><rect x="9" y="25.500" width="6" height="3" rx="1" fill="#9aa5b8"/></symbol>
+<symbol id="chispa" viewBox="0 0 160 200">
+      <g transform="translate(80,70)">
+        <ellipse cx="0" cy="-52" rx="11" ry="40" fill="#e6007e" transform="rotate(-62)"/>
+        <ellipse cx="0" cy="-58" rx="11" ry="44" fill="#00b3c4" transform="rotate(-34)"/>
+        <ellipse cx="0" cy="-62" rx="11" ry="46" fill="#ff6a13" transform="rotate(-10)"/>
+        <ellipse cx="0" cy="-62" rx="11" ry="46" fill="#ffc400" stroke="#24103f" stroke-width="3" transform="rotate(12)"/>
+        <ellipse cx="0" cy="-58" rx="11" ry="44" fill="#e6007e" transform="rotate(36)"/>
+        <ellipse cx="0" cy="-52" rx="11" ry="40" fill="#00b3c4" transform="rotate(62)"/>
+      </g>
+      <path d="M80 36C52 36 36 58 36 82c0 18 11 29 18 42 4 7 4 13 4 19h44c0-6 0-12 4-19 7-13 18-24 18-42 0-24-16-46-44-46Z" fill="#fff4a3" stroke="#24103f" stroke-width="6" stroke-linejoin="round"/>
+      <rect x="58" y="143" width="44" height="10" rx="4" fill="#9aa5b8" stroke="#24103f" stroke-width="5"/>
+      <rect x="63" y="154" width="34" height="9" rx="4" fill="#9aa5b8" stroke="#24103f" stroke-width="5"/>
+      <path d="M52 72Q80 56 108 72L104 88Q80 76 56 88Z" fill="#e6007e" stroke="#24103f" stroke-width="4" stroke-linejoin="round"/>
+      <circle cx="66" cy="80" r="5" fill="#fff"/><circle cx="94" cy="80" r="5" fill="#fff"/>
+      <circle cx="66" cy="81" r="2.6" fill="#24103f"/><circle cx="94" cy="81" r="2.6" fill="#24103f"/>
+      <path d="M66 104Q80 118 94 104" fill="none" stroke="#24103f" stroke-width="5" stroke-linecap="round"/>
+      <circle cx="54" cy="100" r="6" fill="#ff8a6b" opacity=".75"/><circle cx="106" cy="100" r="6" fill="#ff8a6b" opacity=".75"/>
+      <g fill="#ffc400"><circle cx="20" cy="30" r="4"/><circle cx="140" cy="34" r="4"/><circle cx="18" cy="120" r="3"/><circle cx="144" cy="110" r="3"/></g>
+    </symbol>
+<symbol id="bulbico" viewBox="0 0 24 30"><path d="M12 2C6.5 2 3 6 3 10.5c0 3 1.7 4.7 3 6.5.6.9.9 1.7.9 2.8h8.2c0-1.1.3-1.9.9-2.8 1.3-1.8 3-3.5 3-6.5C21 6 17.5 2 12 2Z" fill="currentColor" stroke="#24103f" stroke-width="1.5"/><rect x="8" y="21.5" width="8" height="3" rx="1" fill="#9aa5b8"/><rect x="9" y="25.5" width="6" height="3" rx="1" fill="#9aa5b8"/></symbol>
+</defs></svg>
+<header class="topbar">
+  <div class="brand"><i aria-hidden="true"></i><span>Que no se te vayan las luces</span></div>
+  <div class="tools"><button class="icon-btn" id="homeBtn" type="button" hidden>Inicio</button><button class="icon-btn" id="soundBtn" type="button" aria-pressed="false">Sonido: sí</button></div>
+</header>
+<div class="flagrow" aria-hidden="true"></div><div class="tapebar" aria-hidden="true"></div>
+<div id="app"><main id="screen"></main></div>
+<div class="g1"><div class="sheet" id="sheet1" hidden><div class="sheet-card" role="dialog" aria-modal="true" aria-labelledby="sheetTitle"><div class="sheet-top" id="sheetTop1"></div><div class="sheet-body" id="sheetBody1"></div></div></div></div>
+<div class="g2"><div class="sheet" id="sheet2" hidden><div class="sheet-card" role="dialog" aria-modal="true" aria-labelledby="sheetTitle"><div class="sheet-top" id="sheetTop2"></div><div class="sheet-body" id="sheetBody2"></div></div></div></div>
+<script>
+(function(){
+'use strict';
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* ---------- ayudas de dibujo ---------- */
+const outlet=(x,y,extra='')=>`<g transform="translate(${x},${y})"><rect x="-16" y="-22" width="32" height="44" rx="6" fill="#f4f1e8" stroke="#8c8a80" stroke-width="2"/><rect x="-8" y="-13" width="3.5" height="11" rx="1.5" fill="#333"/><rect x="4.5" y="-13" width="3.5" height="11" rx="1.5" fill="#333"/><circle cx="0" cy="9" r="3" fill="#333"/>${extra}</g>`;
+const person=(x,y,s=1,shirt='#ff7a59',skin='#c68642',extra='',arms='')=>`<g transform="translate(${x},${y}) scale(${s})"><rect x="-10" y="-38" width="8" height="38" rx="3" fill="#2b3a67"/><rect x="2" y="-38" width="8" height="38" rx="3" fill="#2b3a67"/><rect x="-15" y="-80" width="30" height="46" rx="10" fill="${shirt}"/>${arms}<circle cx="0" cy="-93" r="13" fill="${skin}"/><path d="M-13 -96Q0 -113 13 -96Q8 -101 0 -101Q-8 -101 -13 -96Z" fill="#1b1b1b"/>${extra}</g>`;
+const zap=(x,y,s=1)=>`<path d="M${x} ${y} l${-7*s} ${-10*s} l${4*s} 0 l${-7*s} ${-10*s}" stroke="#ffd21f" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
+const cap=(x,y)=>`<g transform="translate(${x},${y})"><rect x="-9" y="-16" width="18" height="12" rx="3" fill="#fff" stroke="#0f9b80" stroke-width="2"/><rect x="-9" y="2" width="18" height="12" rx="3" fill="#fff" stroke="#0f9b80" stroke-width="2"/></g>`;
+
+/* ---------- NIVEL 1: LA CASA ---------- */
+const casaBg=`
+<rect width="800" height="480" fill="#9fdcd2"/>
+<rect y="340" width="800" height="140" fill="#d8a56a"/>
+<g stroke="#c28f55" stroke-width="3"><line x1="0" y1="372" x2="800" y2="372"/><line x1="0" y1="404" x2="800" y2="404"/><line x1="0" y1="436" x2="800" y2="436"/></g>
+<rect y="332" width="800" height="9" fill="#f2efe6"/>
+<rect x="60" y="50" width="160" height="130" rx="6" fill="#bfe8ff" stroke="#f7f3e8" stroke-width="8"/>
+<line x1="140" y1="50" x2="140" y2="180" stroke="#f7f3e8" stroke-width="6"/><line x1="60" y1="115" x2="220" y2="115" stroke="#f7f3e8" stroke-width="6"/>
+<circle cx="185" cy="88" r="17" fill="#ffd21f"/>
+<rect x="400" y="60" width="72" height="56" rx="4" fill="#f5c26b" stroke="#fff" stroke-width="5"/><path d="M410 106l18-22 14 14 10-10 12 18Z" fill="#3fa76a"/>
+<rect x="460" y="236" width="340" height="16" fill="#e9e4d8"/>
+<rect x="468" y="252" width="332" height="82" fill="#5b6fa8"/>
+<g stroke="#43538a" stroke-width="3"><line x1="580" y1="252" x2="580" y2="334"/><line x1="690" y1="252" x2="690" y2="334"/><line x1="745" y1="252" x2="745" y2="334"/></g>
+<g fill="#e9e4d8"><circle cx="572" cy="290" r="4"/><circle cx="588" cy="290" r="4"/><circle cx="682" cy="290" r="4"/><circle cx="698" cy="290" r="4"/></g>
+<rect x="612" y="234" width="110" height="26" rx="5" fill="#c9d2db"/><rect x="616" y="244" width="102" height="14" rx="4" fill="#5fb4ea"/>
+<path d="M700 236V196Q700 186 686 186Q672 186 672 198V206" fill="none" stroke="#9aa5b8" stroke-width="7" stroke-linecap="round"/>
+`;
+const casaSpots=[
+{id:'c1',type:'hazard',label:'Adaptador con varios cables en el tomacorriente',hits:[[130,322,50],[130,395,50]],
+ art:`${outlet(130,290)}<rect x="106" y="312" width="48" height="24" rx="5" fill="#fff" stroke="#7b8494" stroke-width="2"/>
+ <g fill="none" stroke="#222" stroke-width="4" stroke-linecap="round"><path d="M114 336C100 360 70 365 62 395"/><path d="M126 336C124 370 105 385 108 418"/><path d="M138 336C145 372 165 380 170 420"/><path d="M150 336C170 355 200 360 208 392"/></g>
+ <g fill="#444"><rect x="56" y="392" width="12" height="18" rx="2"/><rect x="102" y="415" width="12" height="18" rx="2"/><rect x="164" y="417" width="12" height="18" rx="2"/><rect x="202" y="389" width="12" height="18" rx="2"/></g>
+ <path d="M94 302q-7-9 0-18q7-9 0-18" fill="none" stroke="#e8392a" stroke-width="3.5" stroke-linecap="round"/><path d="M166 302q-7-9 0-18q7-9 0-18" fill="none" stroke="#e8392a" stroke-width="3.5" stroke-linecap="round"/>`,
+ title:'El adaptador sobrecargado',
+ why:'Un solo tomacorriente tiene que aguantar la corriente de todos los aparatos juntos. Los cables se calientan, el plástico se derrite y puede empezar un incendio.',
+ do:'Conecta un aparato de mucho consumo por toma (plancha, estufa, nevera). No uses adaptadores con muchos cables. Si faltan tomas, pide a un adulto que llame a un electricista.',
+ tech:'Potencia: P = V × I. Una plancha de 1.000 W a 120 V consume cerca de 8,3 A. Sumando licuadora y ventilador, la corriente pasa lo que el adaptador soporta y se recalienta.'},
+{id:'c2',type:'hazard',label:'Lámpara de pie y su cable',hits:[[305,436,48],[350,300,44]],
+ art:`<line x1="350" y1="422" x2="350" y2="256" stroke="#555" stroke-width="6"/><ellipse cx="350" cy="424" rx="28" ry="7" fill="#444"/>
+ <path d="M322 256L378 256L366 214L334 214Z" fill="#ffe27a" stroke="#c9a227" stroke-width="3"/>
+ <path d="M350 426C320 452 292 428 264 440" fill="none" stroke="#222" stroke-width="5" stroke-linecap="round"/>
+ <g stroke="#e8832a" stroke-width="2.5" stroke-linecap="round"><path d="M264 440l-14-8"/><path d="M264 440l-17 3"/><path d="M264 440l-13 11"/></g>
+ <ellipse cx="298" cy="434" rx="11" ry="6" fill="#3a3a3a" transform="rotate(-18 298 434)"/>`,
+ title:'El cable pelado con cinta',
+ why:'Cuando se ve el cobre, tocarlo deja pasar la corriente por tu cuerpo. Puede dar un choque fuerte o provocar un cortocircuito. Un pedazo de cinta no devuelve el aislamiento original.',
+ do:'No lo toques ni lo uses. Pide a un adulto que lo desconecte agarrando la clavija y que cambie el cable por uno nuevo.'},
+{id:'c3',type:'hazard',label:'Radio junto al lavaplatos',hits:[[612,222,62]],
+ art:`<rect x="538" y="196" width="58" height="42" rx="6" fill="#e0614b"/><circle cx="560" cy="218" r="12" fill="#f9d7cf" stroke="#7a2b20" stroke-width="2"/><rect x="578" y="205" width="12" height="6" fill="#7a2b20"/><circle cx="584" cy="226" r="4" fill="#7a2b20"/>
+ <path d="M552 196L540 166" stroke="#555" stroke-width="3" stroke-linecap="round"/>
+ <path d="M596 230C616 246 604 238 630 252" fill="none" stroke="#222" stroke-width="4" stroke-linecap="round"/>
+ ${zap(636,250)}<g fill="#9fd4f5"><circle cx="650" cy="236" r="3"/><circle cx="662" cy="230" r="2.5"/><circle cx="618" cy="236" r="2.5"/></g>`,
+ title:'El radio junto al agua',
+ why:'El agua deja pasar la corriente. Si el aparato se cae o el cable se moja, la corriente puede viajar por el agua hasta tu mano.',
+ do:'Mantén los aparatos eléctricos lejos del agua. Sécate muy bien las manos antes de enchufar o desenchufar cualquier cosa.',
+ tech:'Ley de Ohm: I = V / R. Con la piel mojada R baja a unos 1.000 Ω. A 120 V: I = 120 / 1.000 = 0,12 A (120 mA), una corriente que puede ser mortal.'},
+{id:'c4',type:'hazard',label:'Tomacorriente de la pared',hits:[[430,298,40]],
+ art:`${outlet(430,300)}<ellipse cx="0" cy="0" rx="0" ry="0"/><g transform="translate(430,300)"><ellipse cx="0" cy="-8" rx="15" ry="11" fill="#1c1c1c" opacity=".8"/><path d="M0 -30q-9-10 0-20q9-10 0-20" fill="none" stroke="#6b6b6b" stroke-width="4" stroke-linecap="round"/></g>`,
+ title:'El tomacorriente quemado',
+ why:'Las marcas negras y el humo avisan que hay una mala conexión que se recalienta. Puede incendiarse o dar un choque.',
+ do:'No lo uses. Avisa a un adulto para que baje la llave general (el breaker) y llame a un electricista.'},
+{id:'c5',type:'hazard',label:'Tapete en el piso',hits:[[495,430,68]],
+ art:`<path d="M402 398L584 398L606 462L380 462Z" fill="#e26d5c"/><path d="M416 412L574 412" stroke="#fff" stroke-width="4" opacity=".6"/><path d="M398 446L590 446" stroke="#fff" stroke-width="4" opacity=".6"/>
+ <path d="M404 430Q490 408 580 432" fill="none" stroke="#b94a3b" stroke-width="10" stroke-linecap="round" opacity=".7"/>
+ <path d="M404 430L384 436" stroke="#222" stroke-width="4" stroke-linecap="round"/><path d="M582 434L618 440" stroke="#222" stroke-width="4" stroke-linecap="round"/><rect x="616" y="434" width="12" height="16" rx="2" fill="#444" transform="rotate(10 622 442)"/>`,
+ title:'El cable bajo el tapete',
+ why:'Un cable pisado y tapado se daña por dentro y no puede soltar el calor. Nadie ve el daño hasta que salen chispas o fuego.',
+ do:'Deja los cables a la vista, sin muebles ni tapetes encima. Si un cable está aplastado o caliente, cámbialo.'},
+{id:'c6',type:'hazard',label:'Tomacorriente alto con un enchufe',hits:[[292,158,48]],
+ art:`${outlet(275,140)}<g transform="translate(275,140) rotate(30)"><rect x="6" y="-8" width="24" height="16" rx="3" fill="#2d2d2d"/><rect x="-5" y="-5" width="11" height="3" fill="#aaa"/><rect x="-5" y="2" width="11" height="3" fill="#aaa"/></g>
+ <path d="M300 152Q316 162 324 184" fill="none" stroke="#222" stroke-width="4" stroke-linecap="round"/><circle cx="326" cy="192" r="10" fill="#c68642"/><rect x="318" y="196" width="18" height="26" rx="8" fill="#2fb7a0"/>`,
+ title:'Desenchufar jalando el cable',
+ why:'Jalar del cable afloja los hilos de adentro y deja el cobre al descubierto. Con el tiempo da chispas y choques.',
+ do:'Para desenchufar, agarra la clavija (la parte de plástico) y hala derecho, con las manos secas.'},
+{id:'c7',type:'safe',label:'Tomacorriente con tapas',hits:[[40,300,34]],
+ art:`${outlet(40,300)}${cap(40,298)}`,
+ title:'Tomacorriente con tapas protectoras',
+ why:'Esas tapas evitan que los niños metan los dedos u objetos en los huecos. Es una protección, no un riesgo.'},
+{id:'c8',type:'safe',label:'Caja de breakers',hits:[[740,103,48]],
+ art:`<rect x="706" y="60" width="68" height="88" rx="5" fill="#cfd6de" stroke="#8a95a3" stroke-width="3"/><rect x="716" y="72" width="48" height="52" fill="#e9edf2" stroke="#8a95a3" stroke-width="2"/><g stroke="#8a95a3" stroke-width="3"><line x1="728" y1="82" x2="728" y2="114"/><line x1="740" y1="82" x2="740" y2="114"/><line x1="752" y1="82" x2="752" y2="114"/></g><rect x="724" y="132" width="32" height="8" rx="3" fill="#8a95a3"/>`,
+ title:'Caja de breakers cerrada',
+ why:'Está cerrada y en buen estado. Sirve para cortar la energía en una emergencia, y solo la abre un adulto.'}
+];
+
+const casa={id:'casa',name:'La casa',bg:casaBg,spots:casaSpots,tip:'Empieza por los tomacorrientes, los cables y todo lo que esté cerca del agua.'};
+
+/* ---------- NIVEL 2: LA CALLE ---------- */
+const calleBg=`
+<defs><linearGradient id="skyC" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8fd3ff"/><stop offset="1" stop-color="#ffe9b8"/></linearGradient></defs>
+<rect width="800" height="480" fill="url(#skyC)"/>
+<circle cx="690" cy="56" r="28" fill="#ffd21f"/>
+<rect x="0" y="252" width="150" height="90" fill="#f6a6a0"/><rect x="150" y="232" width="170" height="110" fill="#ffd27a"/><rect x="320" y="256" width="150" height="86" fill="#8fd0c0"/><rect x="470" y="240" width="160" height="102" fill="#b7a6e8"/><rect x="630" y="250" width="170" height="92" fill="#f3b57a"/>
+<g fill="#fff8e6" stroke="#12203f" stroke-width="2"><rect x="30" y="278" width="34" height="34"/><rect x="190" y="262" width="36" height="36"/><rect x="270" y="262" width="36" height="36"/><rect x="420" y="282" width="30" height="30"/><rect x="510" y="266" width="36" height="36"/><rect x="570" y="266" width="36" height="36"/><rect x="680" y="276" width="36" height="36"/></g>
+<rect x="0" y="336" width="800" height="50" fill="#cfd3d8"/><rect x="0" y="384" width="800" height="96" fill="#5a6272"/>
+<g stroke="#f4f0e0" stroke-width="5" stroke-dasharray="26 20"><line x1="0" y1="446" x2="800" y2="446"/></g>
+`;
+const pole=(x,top=90)=>`<rect x="${x-6}" y="${top}" width="12" height="${345-top}" fill="#7a5a3a"/><rect x="${x-34}" y="${top+14}" width="68" height="8" rx="2" fill="#5b3f26"/><g fill="#d8d8d8"><circle cx="${x-28}" cy="${top+12}" r="4"/><circle cx="${x}" cy="${top+12}" r="4"/><circle cx="${x+28}" cy="${top+12}" r="4"/></g>`;
+const calleSpots=[
+{id:'k1',type:'hazard',label:'Árbol junto a los cables',hits:[[108,135,60],[108,250,40]],
+ art:`<rect x="100" y="190" width="16" height="152" fill="#7a5a3a"/><circle cx="108" cy="150" r="58" fill="#3fa76a"/><circle cx="64" cy="172" r="36" fill="#349460"/><circle cx="154" cy="170" r="36" fill="#349460"/>
+ <path d="M212 108Q110 138 0 112" fill="none" stroke="#1d1d1d" stroke-width="3"/>`,
+ title:'Ramas sobre los cables',
+ why:'Las ramas húmedas pueden conducir la corriente y, si hay una falla, quien toque el árbol queda en peligro. Además las ramas pueden romper los cables.',
+ do:'No trepes ni juegues bajo árboles con ramas en los cables. Avisa a la empresa de energía para que hagan la poda con las herramientas y el personal adecuados.'},
+{id:'k2',type:'hazard',label:'Enredo de cables en el poste',hits:[[245,190,70]],
+ art:`${pole(240)}<g fill="none" stroke-linecap="round" stroke-width="3.5"><path d="M228 112C190 150 270 175 232 215S210 250 250 262" stroke="#1d1d1d"/><path d="M252 112C300 140 205 190 270 215S300 245 262 275" stroke="#6b4423"/><path d="M262 112C230 160 300 170 250 200S215 235 236 250" stroke="#c0392b"/><path d="M240 112C255 150 215 160 245 195" stroke="#1d1d1d"/></g><circle cx="250" cy="268" r="9" fill="#1d1d1d"/>${zap(262,262,.8)}`,
+ title:'La conexión ilegal',
+ why:'Los cables improvisados y sin aislar sobrecargan la red y pueden electrocutar a quien los toque. También causan cortes de luz e incendios.',
+ do:'Usa solo conexiones instaladas por la empresa de energía y no toques cables sueltos. Repórtalos para que los revisen.'},
+{id:'k3',type:'hazard',label:'Cometa y su hilo',hits:[[400,100,50],[407,205,22],[410,285,30]],
+ art:`<path d="M400 62L428 94L400 128L372 94Z" fill="#e8392a" stroke="#12203f" stroke-width="3"/><path d="M400 62L400 128M372 94L428 94" stroke="#ffd21f" stroke-width="3"/>
+ <path d="M400 128L413 286" stroke="#12203f" stroke-width="2"/>
+ ${person(395,372,.8,'#2fb7a0','#c68642','','<path d="M13 -72L26 -104" stroke="#c68642" stroke-width="7" stroke-linecap="round"/>')}`,
+ title:'La cometa cerca de la red',
+ why:'El hilo o la cometa pueden tocar los cables y llevar la corriente hasta tus manos, sobre todo si están mojados o si el hilo tiene partes metálicas.',
+ do:'Elévala en un parque abierto, lejos de postes y cables. Si se enreda en la red, suelta el hilo, no intentes sacarla y avisa a un adulto.'},
+{id:'k4',type:'hazard',label:'Cable de energía caído en el charco',hits:[[522,425,58],[575,250,30]],
+ art:`${pole(540)}<ellipse cx="520" cy="440" rx="62" ry="15" fill="#7fc4ee"/><path d="M566 110C590 220 562 330 524 430" fill="none" stroke="#1d1d1d" stroke-width="5" stroke-linecap="round"/>${zap(510,428,1)}${zap(538,436,.8)}`,
+ title:'El cable caído en el charco',
+ why:'Un cable roto puede tener corriente aunque no haga chispas. El agua la reparte por el suelo y alcanza a quien pise cerca.',
+ do:'No te acerques ni lo toques con nada. Aléjate bien, no dejes pasar a nadie y llama al 123 y a la empresa de energía.',
+ tech:'Cerca de un cable caído el suelo mojado tiene distintos voltajes de un punto a otro (voltaje de paso). Un paso largo puede hacer pasar corriente por tus piernas.'},
+{id:'k5',type:'hazard',label:'Caja gris abierta en la acera',hits:[[642,335,48]],
+ art:`<rect x="610" y="298" width="62" height="48" fill="#7f8c8d" stroke="#12203f" stroke-width="2"/><path d="M672 298L704 312L704 352L672 346Z" fill="#95a5a6" stroke="#12203f" stroke-width="2"/><rect x="620" y="306" width="42" height="34" fill="#1d2430"/><path d="M642 310l-8 14h8l-5 12" fill="none" stroke="#ffd21f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="598" cy="364" r="12" fill="#fff" stroke="#12203f" stroke-width="3"/><path d="M598 356l6 5-2 7h-8l-2-7Z" fill="#12203f"/>`,
+ title:'El transformador abierto',
+ why:'Dentro hay corrientes muy altas y la puerta abierta deja partes con energía al alcance. Un toque, o un balón que se meta a buscarlo, puede ser mortal.',
+ do:'Quédate lejos de transformadores y cajas de energía, aunque estén abiertos o sin candado. Si ves una abierta, avisa a un adulto y a la empresa de energía.'},
+{id:'k6',type:'hazard',label:'Obrero con una varilla larga',hits:[[752,200,56],[748,300,46]],
+ art:`<rect x="749" y="120" width="6" height="214" fill="#a9b4c0" stroke="#6b7785" stroke-width="1.5"/>${zap(752,122,.9)}
+ ${person(738,372,.9,'#f39c12','#8d5524','<path d="M-14 -97Q0 -122 14 -97Z" fill="#ffd21f"/>','<path d="M13 -72L16 -52" stroke="#8d5524" stroke-width="7" stroke-linecap="round"/>')}`,
+ title:'La varilla metálica cerca de los cables',
+ why:'El metal conduce la electricidad. Cerca de la alta tensión la corriente puede saltar por el aire sin que toques el cable.',
+ do:'Mantén escaleras, antenas, varillas y tubos metálicos lejos de la red. Para trabajar cerca de los cables, la empresa de energía envía personal capacitado.'},
+{id:'k7',type:'safe',label:'Medidor de energía en la casa',hits:[[335,285,28]],
+ art:`<rect x="320" y="266" width="32" height="42" rx="4" fill="#d5dbe0" stroke="#7b8494" stroke-width="2"/><circle cx="336" cy="283" r="9" fill="#bfe8ff" stroke="#7b8494" stroke-width="2"/><rect x="326" y="298" width="20" height="5" rx="2" fill="#7b8494"/>`,
+ title:'Medidor cerrado y en buen estado',
+ why:'La caja está cerrada y sin cables al aire. Así está bien protegido.'},
+{id:'k8',type:'safe',label:'Lámpara del alumbrado público',hits:[[40,215,30]],
+ art:`<rect x="32" y="196" width="8" height="146" fill="#555"/><path d="M36 198Q50 180 72 196" fill="none" stroke="#555" stroke-width="6"/><rect x="58" y="193" width="28" height="10" rx="4" fill="#ffe27a" stroke="#555" stroke-width="2"/>`,
+ title:'Alumbrado público en buen estado',
+ why:'La lámpara está firme, con su cable dentro del poste. Es una instalación segura.'}
+];
+const calle={id:'calle',name:'La calle',bg:calleBg+`
+<path d="M212 108Q360 160 508 108M240 108Q390 168 540 108M268 108Q400 158 572 108M572 108Q690 142 800 112" fill="none" stroke="#1d1d1d" stroke-width="3"/>`,spots:calleSpots,tip:'Mira hacia arriba y también al suelo. Los cables no siempre hacen chispas.'};
+
+/* ---------- NIVEL 3: LA ESCUELA ---------- */
+const escBg=`
+<defs><linearGradient id="skyE" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a9dcff"/><stop offset="1" stop-color="#e6f6ff"/></linearGradient></defs>
+<rect width="800" height="480" fill="url(#skyE)"/>
+<rect width="480" height="480" fill="#fff1b8"/>
+<rect y="350" width="480" height="130" fill="#c9a074"/><g stroke="#b78f63" stroke-width="3"><line x1="0" y1="384" x2="480" y2="384"/><line x1="0" y1="418" x2="480" y2="418"/><line x1="0" y1="452" x2="480" y2="452"/></g>
+<rect y="344" width="480" height="8" fill="#f2efe6"/>
+<rect x="150" y="50" width="230" height="120" fill="#2f6f5a" stroke="#8b5a2b" stroke-width="8"/>
+<text x="265" y="122" fill="#f1f5ee" font-size="28" font-family="Atkinson Hyperlegible,sans-serif" text-anchor="middle">I = V / R</text>
+<path d="M170 150h60M300 150h60" stroke="#f1f5ee" stroke-width="3" opacity=".7"/>
+<rect x="474" y="0" width="12" height="480" fill="#d9c07a"/>
+<rect x="486" y="360" width="314" height="120" fill="#aab4bf"/>
+<circle cx="560" cy="345" r="34" fill="#3fa76a"/><rect x="520" y="352" width="80" height="10" fill="#aab4bf"/>
+<rect x="250" y="330" width="90" height="8" fill="#8b5a2b"/><rect x="256" y="338" width="6" height="22" fill="#8b5a2b"/><rect x="328" y="338" width="6" height="22" fill="#8b5a2b"/>
+`;
+const escSpots=[
+{id:'e1',type:'hazard',label:'Tablero eléctrico de la pared',hits:[[62,105,50]],
+ art:`<rect x="26" y="58" width="66" height="94" rx="4" fill="#cfd6de" stroke="#8a95a3" stroke-width="3"/><path d="M92 58L122 70L122 160L92 152Z" fill="#b9c2cc" stroke="#8a95a3" stroke-width="3"/><rect x="36" y="70" width="46" height="70" fill="#2a3446"/><g stroke="#e8392a" stroke-width="3" stroke-linecap="round" fill="none"><path d="M44 80q10 8 0 20"/><path d="M60 78q-8 12 4 24"/></g><g stroke="#ffd21f" stroke-width="3" stroke-linecap="round" fill="none"><path d="M70 82q6 10-2 22"/></g>`,
+ title:'El tablero abierto',
+ why:'Las partes de un tablero abierto tienen energía. Tocarlas por curiosidad puede dar una descarga fuerte.',
+ do:'El tablero debe estar siempre cerrado y con llave. Solo personal autorizado lo abre. Si lo ves abierto, avisa a tu profe.'},
+{id:'e2',type:'hazard',label:'Dispensador de agua',hits:[[108,325,55]],
+ art:`<rect x="82" y="200" width="46" height="58" rx="14" fill="#8fd0ff" stroke="#5aa4d6" stroke-width="3"/><rect x="74" y="256" width="62" height="108" rx="6" fill="#e8edf2" stroke="#8a95a3" stroke-width="3"/><rect x="96" y="290" width="18" height="10" rx="3" fill="#2f6fd6"/><rect x="84" y="340" width="42" height="8" fill="#8a95a3"/>
+ <ellipse cx="112" cy="378" rx="58" ry="12" fill="#7fc4ee"/><path d="M136 330C160 338 160 362 150 374" fill="none" stroke="#222" stroke-width="4" stroke-linecap="round"/><rect x="143" y="368" width="14" height="14" rx="2" fill="#444"/>${zap(152,368,.7)}`,
+ title:'El charco bajo el dispensador',
+ why:'El agua del piso llega hasta el enchufe y puede dejar con corriente todo el charco.',
+ do:'No pises el charco ni toques el aparato. Avisa a tu profe para que lo sequen y revisen.',
+ tech:'El agua y las impurezas bajan la resistencia entre el enchufe y el piso. La corriente busca siempre el camino con menos resistencia.'},
+{id:'e3',type:'hazard',label:'Regleta con cargadores y mochila encima',hits:[[218,435,48]],
+ art:`<rect x="180" y="432" width="74" height="16" rx="4" fill="#e8e8e8" stroke="#7b8494" stroke-width="2"/><g fill="#fff" stroke="#7b8494" stroke-width="2"><rect x="186" y="418" width="14" height="14" rx="2"/><rect x="206" y="418" width="14" height="14" rx="2"/><rect x="226" y="418" width="14" height="14" rx="2"/></g>
+ <rect x="198" y="404" width="62" height="46" rx="14" fill="#e26d5c" stroke="#8c3d31" stroke-width="3"/><path d="M204 420h50" stroke="#8c3d31" stroke-width="3"/>
+ <path d="M200 400q-8-10 0-18q8-8 0-18M236 400q-8-10 0-18q8-8 0-18" fill="none" stroke="#e8392a" stroke-width="3.5" stroke-linecap="round"/>`,
+ title:'La regleta tapada con la mochila',
+ why:'Una regleta con muchos cargadores y cubierta con tela no puede soltar el calor. Se recalienta y puede incendiarse.',
+ do:'Deja las regletas libres de ropa y mochilas y no conectes más aparatos de los que indica la etiqueta.'},
+{id:'e4',type:'hazard',label:'Cable del proyector en el piso',hits:[[330,430,56]],
+ art:`<rect x="258" y="308" width="52" height="22" rx="4" fill="#444"/><circle cx="270" cy="319" r="6" fill="#bfe8ff"/>
+ <path d="M296 330C296 372 330 380 322 410C312 448 396 464 430 440C456 420 454 392 466 450" fill="none" stroke="#222" stroke-width="4" stroke-linecap="round"/><rect x="456" y="438" width="14" height="18" rx="3" fill="#f4f1e8" stroke="#8c8a80" stroke-width="2"/>`,
+ title:'El cable suelto en el piso',
+ why:'Alguien puede tropezar, jalar el cable y dañar el enchufe. Si lo pisan muchas veces, se rompe por dentro.',
+ do:'Recoge los cables y pídele a tu profe que los pegue a la pared con una canaleta para que nadie los pise.'},
+{id:'e5',type:'hazard',label:'Compañero con una regla metálica y un tomacorriente',hits:[[440,292,46],[402,300,36]],
+ art:`${outlet(455,285)}${person(400,350,.9,'#6c5ce7','#a86b3c','','<path d="M14 -72L46 -64" stroke="#a86b3c" stroke-width="7" stroke-linecap="round"/>')}<rect x="414" y="276" width="46" height="7" fill="#c8d0d9" stroke="#6b7785" stroke-width="1.5"/>${zap(468,268,.9)}`,
+ title:'La regla en el tomacorriente',
+ why:'El metal deja pasar la corriente directo a tu mano. Puede dar un choque fuerte, quemaduras o dejarte sin respirar.',
+ do:'Nunca metas objetos en un tomacorriente. Si ves a alguien hacerlo, avisa a tu profe sin tocar a la persona.',
+ tech:'Un metal tiene resistencia muy baja, así que casi no frena la corriente (I = V / R). La resistencia que queda es la de tu cuerpo.'},
+{id:'e6',type:'hazard',label:'Niño trepando el poste del patio',hits:[[630,138,42],[680,250,56],[680,325,38]],
+ art:`<rect x="674" y="100" width="12" height="262" fill="#7a5a3a"/><rect x="642" y="112" width="76" height="8" rx="2" fill="#5b3f26"/>
+ <path d="M648 114Q560 140 486 118M712 114Q760 130 800 114" fill="none" stroke="#1d1d1d" stroke-width="3"/>
+ <circle cx="604" cy="126" r="13" fill="#fff" stroke="#12203f" stroke-width="3"/><path d="M604 119l6 5-2 7h-8l-2-7Z" fill="#12203f"/>
+ ${person(680,350,1,'#ff7a59','#c68642','','<path d="M-12 -72L-2 -112M12 -72L2 -112" stroke="#c68642" stroke-width="7" stroke-linecap="round"/>')}`,
+ title:'Trepar al poste por la pelota',
+ why:'Subir a un poste o acercarte a la red puede darte una descarga aunque no toques el cable.',
+ do:'Nunca trepes un poste ni un árbol cerca de cables. Si la pelota se queda atrapada, déjala. Avisa a un adulto y a la empresa de energía.'},
+{id:'e7',type:'safe',label:'Tomacorriente con tapas protectoras',hits:[[430,196,30]],
+ art:`${outlet(430,190)}${cap(430,188)}`,
+ title:'Tomacorriente con tapas protectoras',
+ why:'Las tapas impiden que alguien meta objetos. Es una medida de seguridad.'},
+{id:'e8',type:'safe',label:'Lámpara del techo',hits:[[270,26,32]],
+ art:`<rect x="212" y="16" width="116" height="14" rx="5" fill="#fff7c2" stroke="#9aa5b8" stroke-width="3"/><path d="M226 32l-14 14M270 32v18M314 32l14 14" stroke="#ffe27a" stroke-width="3" stroke-linecap="round" opacity=".8"/>`,
+ title:'Lámpara fija en el techo',
+ why:'Está firme, alta y sin cables a la vista. No es un riesgo.'}
+];
+const escuela={id:'escuela',name:'La escuela',bg:escBg,spots:escSpots,tip:'Mira el salón y el patio. Los riesgos también están en los juegos y en el agua.'};
+const LEVELS=[casa,calle,escuela];
+
+/* ---------- evaluación final ---------- */
+const QUIZ=[
+{t:'Emergencia',q:'Un compañero quedó pegado a un cable con corriente y no se puede soltar. ¿Qué haces primero?',o:['Lo jalo con las manos para separarlo','Pido ayuda a gritos y llamo al 123. Un adulto corta la energía si puede hacerlo con seguridad','Le echo un balde de agua','Espero a que se suelte solo'],c:1,e:'Quien toque a la víctima también recibe la descarga. Primero ayuda de adultos y llamada al 123. Cortar la energía lo hace quien pueda hacerlo de forma segura.'},
+{t:'Emergencia',q:'¿Qué número marcas en Colombia para pedir ayuda en una emergencia?',o:['911','123','112','100'],c:1,e:'El 123 es la línea única de emergencias en Colombia.'},
+{t:'Ley de Ohm',q:'Con el mismo voltaje, una persona se moja las manos y su resistencia baja. ¿Qué pasa con la corriente (I = V / R)?',o:['Aumenta','Disminuye','Se queda igual','Se vuelve cero'],c:0,e:'Si R baja y V es igual, I = V / R sube. Por eso con las manos mojadas un choque es más peligroso.'},
+{t:'Buen uso',q:'¿Cómo se desenchufa un aparato?',o:['Jalando del cable','Agarrando la clavija y halando derecho, con las manos secas','Con un palo','Da igual cómo'],c:1,e:'Jalar del cable afloja los hilos de adentro. La clavija se agarra con las manos secas.'},
+{t:'Calle',q:'¿Dónde es más seguro elevar una cometa?',o:['Debajo de un poste','En un parque abierto, lejos de postes y cables','Junto a un transformador','En la terraza, al lado de los cables de la calle'],c:1,e:'El hilo puede tocar los cables y llevar la corriente hasta ti. Busca espacios abiertos y sin red eléctrica.'},
+{t:'Calle',q:'Ves un cable de energía caído en un charco. ¿Qué haces?',o:['Lo aparto con un palo de escoba','Me quedo lejos, no dejo pasar a nadie y llamo al 123 y a la empresa de energía','Lo piso con botas de caucho','Lo toco rápido para ver si tiene corriente'],c:1,e:'Un cable caído puede tener corriente aunque no haga chispas. No lo toques con nada: aléjate y pide ayuda.'},
+{t:'Escuela',q:'La pelota quedó atrapada en los cables del poste del patio. ¿Qué haces?',o:['Trepo rápido por ella','Le tiro una piedra','La dejo y aviso a un adulto','Uso una varilla de hierro'],c:2,e:'Cerca de la red puede haber descarga aunque no toques el cable. Una pelota se reemplaza, una vida no.'},
+{t:'Casa',q:'Un cable de la lámpara tiene el cobre a la vista y alguien le puso cinta. ¿Qué haces?',o:['Sigo usándola, la cinta lo arregla','Pido a un adulto que lo desconecte y cambie el cable','Lo toco para comprobar','Lo meto debajo del tapete'],c:1,e:'La cinta no devuelve el aislamiento. Hay que cambiar el cable.'},
+{t:'Casa',q:'Una plancha, una licuadora y un ventilador están en un solo adaptador. ¿Por qué es peligroso?',o:['Porque gasta más espacio','Porque el adaptador y los cables se sobrecargan y se calientan','Porque los aparatos se ponen celosos','No es peligroso'],c:1,e:'Cada toma y cable soportan una corriente máxima. Si la superas, se recalienta y puede haber incendio.'},
+{t:'Primeros auxilios',q:'Después de un choque la quemadura se ve pequeña. ¿Qué haces?',o:['Nada, es pequeña','Se lo cuento a un adulto y voy al médico, porque el daño puede estar por dentro','Le pongo pasta de dientes','Me aguanto sin decir nada'],c:1,e:'La corriente puede dañar tejidos y el corazón por dentro. Siempre se revisa con un médico.'}
+];
+const MODES={explorer:{label:'Explorador',time:100,hints:2},engineer:{label:'Ingeniero',time:60,hints:0}};
+const NSP=l=>l.spots.filter(s=>s.type==='hazard').length;
+
+/* ---------- estado ---------- */
+const S={name:'',mode:'explorer',li:0,best:[null,null,null],quiz:null};
+let P=null,timer=null,sheetCb=null,muted=false,AC=null;
+const screen=$('#screen'),sheet=$('#sheet1');
+function show(h){stopTimer();screen.innerHTML='<div class="g1">'+h+'</div>';window.scrollTo(0,0)}
+
+/* ---------- sonido ---------- */
+function tone(seq){
+  if(window.CS&&CS.muted)return;
+  try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();let t=AC.currentTime;
+    seq.forEach(([f,d])=>{const o=AC.createOscillator(),g=AC.createGain();o.type='triangle';o.frequency.value=f;
+      g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.18,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+d);
+      o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+d+.02);t+=d*.9});}catch(e){}
+}
+const sfx={ok:()=>tone([[660,.1],[880,.16]]),bad:()=>tone([[300,.14],[200,.22]]),win:()=>tone([[523,.12],[659,.12],[784,.12],[1047,.28]]),lose:()=>tone([[330,.18],[247,.18],[196,.3]])};
+
+/* ---------- piezas de interfaz ---------- */
+const chispa=(cls='chispa')=>`<svg class="${cls}" viewBox="0 0 120 152" aria-hidden="true"><use href="#chispa1"/></svg>`;
+const bulbSvg=on=>`<svg class="bulb ${on?'':'off'}" viewBox="0 0 24 30" aria-hidden="true"><use href="#bulbico1"/></svg>`;
+const star=on=>`<svg viewBox="0 0 24 24" aria-hidden="true"><path class="${on?'on':'off'}" d="M12 2.5l2.9 6.2 6.8.8-5 4.7 1.3 6.7L12 17.5 6 20.9l1.3-6.7-5-4.7 6.8-.8Z" stroke-linejoin="round"/></svg>`;
+
+/* ---------- inicio ---------- */
+function showStart(){
+  S.li=0;S.best=[null,null,null];S.quiz=null;if(window.CS){S.name=CS.name||S.name;S.mode=CS.mode||S.mode}
+  show(`<section class="hero">
+  <div>
+    <p class="kicker">Juego de seguridad eléctrica</p>
+    <h1>¡Que no se te <span class="lit">vayan las luces!</span></h1>
+    <p class="lead">Recorre una casa, una calle y una escuela. Encuentra los riesgos eléctricos antes de que se acabe el tiempo. Cada error te cuesta una luz.</p>
+    <form class="form" id="startForm" autocomplete="off">
+      <div class="field"><label class="lbl" for="pname">¿Cómo te llamas?</label><input type="text" id="pname" maxlength="24" placeholder="Tu nombre" value="${esc(S.name)}"></div>
+      <div class="field"><span class="lbl" id="modeLbl">Elige tu modo</span>
+        <div class="modes" role="radiogroup" aria-labelledby="modeLbl">
+          <label class="mode"><input type="radio" name="mode" value="explorer" ${S.mode==='explorer'?'checked':''}><span><b>Explorador</b><small>Para niños. 100 segundos y 2 pistas.</small></span></label>
+          <label class="mode"><input type="radio" name="mode" value="engineer" ${S.mode==='engineer'?'checked':''}><span><b>Ingeniero</b><small>Para adolescentes. 60 segundos, sin pistas y con datos técnicos.</small></span></label>
+        </div></div>
+      <div><button class="btn" type="submit">Jugar</button></div>
+    </form>
+  </div>
+  <div class="hero-art"><div class="glow">${chispa()}</div><p class="bubble">Soy Chispa. Te ayudo a encontrar los riesgos y a saber qué hacer en cada caso.</p></div>
+</section>
+<section class="how" aria-label="Cómo se juega">
+  <div class="panel"><div class="n">1</div><h3>Busca</h3><p>Toca los objetos que creas peligrosos en cada escena. Ojo: algunos son seguros.</p></div>
+  <div class="panel"><div class="n">2</div><h3>Aprende</h3><p>Cada hallazgo te explica qué puede pasar y cuál es la forma segura de actuar.</p></div>
+  <div class="panel"><div class="n">3</div><h3>Demuestra</h3><p>Al final respondes 10 preguntas y recibes tu diploma de seguridad eléctrica.</p></div>
+</section>
+<p class="foot">Inspirado en la campaña “Que no se te vayan las luces” del CIDET, la Universidad del Norte y el grupo IEEE. En una emergencia en Colombia, llama al 123.</p>`);
+  $('#startForm').addEventListener('submit',e=>{e.preventDefault();S.name=$('#pname').value.trim();S.mode=(document.querySelector('input[name=mode]:checked')||{}).value||'explorer';CS.name=S.name;CS.mode=S.mode;showIntro(0)});
+}
+
+/* ---------- introducción de nivel ---------- */
+function showIntro(i){
+  S.li=i;const L=LEVELS[i],M=MODES[S.mode],n=NSP(L);
+  show(`<section class="intro panel">
+  <span class="pill">Nivel ${i+1} de 3</span>
+  <h2>${L.name}</h2>
+  <ul><li>Encuentra <b>${n} riesgos</b> eléctricos tocándolos en la escena.</li>
+  <li>Hay <b>${L.spots.length-n} cosas seguras</b>. Si las señalas, se apaga una luz.</li>
+  <li>Tienes <b>3 luces</b> y <b>${M.time} segundos</b>${M.hints?` y ${M.hints} pistas`:''}.</li></ul>
+  <div class="tip">${chispa('chispa')}<p><b>Consejo de Chispa:</b> ${L.tip}</p></div>
+  <div class="btn-row"><button class="btn" id="go" type="button">Empezar</button></div>
+</section>`);
+  $('#go').addEventListener('click',startLevel);
+}
+
+/* ---------- nivel ---------- */
+function sceneSVG(L){
+  const spots=L.spots.map(s=>{const h=s.hits[0];
+    return `<g class="spot" data-id="${s.id}" tabindex="0" role="button" aria-label="Revisar: ${esc(s.label)}">${s.art}
+    ${s.hits.map(([x,y,r])=>`<circle cx="${x}" cy="${y}" r="${r}" fill="transparent"/>`).join('')}
+    <g class="mark"><circle class="ring" cx="${h[0]}" cy="${h[1]}" r="${h[2]}"/><g class="badge" transform="translate(${h[0]+h[2]*.62},${h[1]-h[2]*.62})"><circle r="15"/><path d="M-7 0L-2 5L8 -5"/></g></g></g>`}).join('');
+  return `<svg id="scene" viewBox="0 0 800 480" role="group" aria-label="Escena: ${L.name}">${L.bg}${spots}</svg>`;
+}
+function hudHTML(){
+  const L=LEVELS[S.li];
+  return `<div class="hud"><div class="hud-level"><span class="lv">Nivel ${S.li+1} de 3</span><strong>${L.name}</strong></div>
+  <div class="bulbs" id="bulbs" role="img" aria-label="Luces restantes"></div>
+  <div class="found" aria-live="polite">Riesgos <b id="foundN">0</b> de ${NSP(L)}</div>
+  <div class="clockrow"><div class="clock-bar"><i id="clockBar"></i></div><span id="clockT"></span><button class="btn btn-ghost" id="hintBtn" type="button"></button></div></div>`;
+}
+function startLevel(){
+  const L=LEVELS[S.li],M=MODES[S.mode];
+  show(hudHTML()+`<div class="sceneframe tape">${sceneSVG(L)}</div><p class="scenehelp">Toca un objeto para revisarlo. Si tocas un lugar vacío no pasa nada.</p>`);
+  P={found:new Set(),flag:new Set(),bulbs:3,t:M.time,max:M.time,hints:M.hints,score:0,paused:false,over:false,wrong:0};
+  updateHUD();
+  timer=setInterval(tick,200);
+  const svg=$('#scene');
+  svg.addEventListener('click',e=>{
+    const sp=e.target.closest('.spot');
+    if(sp){onSpot(sp.dataset.id);return}
+    if(P&&!P.paused&&!P.over)ripple(e,svg);
+  });
+  svg.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.classList&&e.target.classList.contains('spot')){e.preventDefault();onSpot(e.target.dataset.id)}});
+  $('#hintBtn').addEventListener('click',useHint);
+}
+function stopTimer(){if(timer){clearInterval(timer);timer=null}}
+function tick(){
+  if(!P||P.paused||P.over)return;
+  P.t=Math.max(0,P.t-0.2);updateHUD();
+  if(P.t<=0)finishLevel('time');
+}
+function updateHUD(){
+  if(!P)return;
+  const b=$('#bulbs');if(b)b.innerHTML=[0,1,2].map(i=>bulbSvg(i<P.bulbs)).join('');
+  const f=$('#foundN');if(f)f.textContent=P.found.size;
+  const bar=$('#clockBar');if(bar){bar.style.width=(P.t/P.max*100)+'%';bar.classList.toggle('low',P.t<=15)}
+  const ct=$('#clockT');if(ct)ct.textContent=Math.ceil(P.t)+' s';
+  const h=$('#hintBtn');if(h){const hasHints=MODES[S.mode].hints>0;h.style.display=hasHints?'':'none';h.textContent='Pista ('+P.hints+')';h.disabled=P.hints<=0||P.over}
+}
+function ripple(e,svg){
+  try{const pt=svg.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;const p=pt.matrixTransform(svg.getScreenCTM().inverse());
+    const c=document.createElementNS('http://www.w3.org/2000/svg','circle');c.setAttribute('class','ripple');c.setAttribute('cx',p.x);c.setAttribute('cy',p.y);c.setAttribute('r',4);svg.appendChild(c);setTimeout(()=>c.remove(),650)}catch(err){}
+}
+function useHint(){
+  if(!P||P.over||P.paused||P.hints<=0)return;
+  const L=LEVELS[S.li];const left=L.spots.filter(s=>s.type==='hazard'&&!P.found.has(s.id));
+  if(!left.length)return;
+  const s=left[Math.floor(Math.random()*left.length)];const el=document.querySelector(`.spot[data-id="${s.id}"]`);
+  if(el){el.classList.add('hint');setTimeout(()=>el.classList.remove('hint'),3000)}
+  P.hints--;updateHUD();
+}
+function onSpot(id){
+  if(!P||P.over||P.paused)return;
+  const L=LEVELS[S.li],s=L.spots.find(x=>x.id===id),el=document.querySelector(`.spot[data-id="${id}"]`);
+  const again=P.found.has(id)||P.flag.has(id);
+  if(s.type==='hazard'){
+    if(!again){P.found.add(id);P.score+=100;el.classList.add('found');sfx.ok();updateHUD()}
+    openSheet('good',again?'Ya lo encontraste':'¡Riesgo encontrado!'+(again?'':'  +100'),
+      `<h3>${s.title}</h3><div><h4>¿Qué puede pasar?</h4><p>${s.why}</p></div><div class="box-do"><h4>Lo seguro</h4><p>${s.do}</p></div>${(S.mode==='engineer'&&s.tech)?`<div class="box-tech"><h4>Dato técnico</h4><p>${s.tech}</p></div>`:''}`,afterSheet);
+  }else{
+    if(!again){P.flag.add(id);P.bulbs--;P.wrong++;P.score=Math.max(0,P.score-50);el.classList.add('flag');sfx.bad();updateHUD()}
+    openSheet('info',again?'Esto es seguro':'Esto es seguro  -1 luz',
+      `<h3>${s.title}</h3><div><p>${s.why}</p></div><p>Buen ojo al dudar, pero esto no es un riesgo. Sigue buscando.</p>`,afterSheet);
+  }
+}
+function afterSheet(){
+  if(!P||P.over)return;
+  if(P.found.size>=NSP(LEVELS[S.li]))finishLevel('win');
+  else if(P.bulbs<=0)finishLevel('bulbs');
+}
+function openSheet(kind,top,body,cb){
+  if(P)P.paused=true;sheetCb=cb;
+  $('#sheetTop1').className='sheet-top '+kind;$('#sheetTop1').textContent=top;
+  $('#sheetBody1').innerHTML=body+'<div><button class="btn" type="button" id="sheetOk">Seguir</button></div>';
+  $('#sheetBody1 h3').id='sheetTitle';
+  sheet.hidden=false;$('#sheetOk').focus();
+}
+function closeSheet(){
+  if(sheet.hidden)return;sheet.hidden=true;if(P)P.paused=false;
+  const cb=sheetCb;sheetCb=null;if(cb)cb();
+}
+sheet.addEventListener('click',e=>{if(e.target.id==='sheetOk'||e.target===sheet)closeSheet()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet()});
+document.addEventListener('visibilitychange',()=>{if(P&&!P.over&&document.hidden)P.paused=true;else if(P&&!P.over&&sheet.hidden)P.paused=false});
+
+/* ---------- fin de nivel ---------- */
+function finishLevel(reason){
+  if(!P||P.over)return;P.over=true;stopTimer();
+  const L=LEVELS[S.li],n=NSP(L),found=P.found.size;
+  const timeBonus=reason==='win'?Math.round(P.t)*2:0;
+  const score=Math.max(0,P.score+timeBonus);
+  const stars=(found===n&&P.bulbs>=2)?3:(found>=Math.ceil(n*.66)?2:(found>=2?1:0));
+  const res={found:[...P.found],missed:L.spots.filter(s=>s.type==='hazard'&&!P.found.has(s.id)).map(s=>s.id),bulbs:P.bulbs,score,stars,reason};
+  const prev=S.best[S.li];if(!prev||res.score>prev.score)S.best[S.li]=res;
+  reason==='win'?sfx.win():sfx.lose();
+  showLevelResult(res);
+}
+function showLevelResult(res){
+  const L=LEVELS[S.li],n=NSP(L);
+  const head={win:['¡Nivel superado!','Encontraste todos los riesgos. Así se cuida una casa, una calle o una escuela.','win'],
+    time:['Se acabó el tiempo','Mira qué riesgos se te pasaron y qué hacer en cada caso.','lost'],
+    bulbs:['¡Se fueron las luces!','Señalaste demasiadas cosas seguras. Repasa lo que se te pasó.','lost']}[res.reason];
+  const rows=L.spots.filter(s=>s.type==='hazard').map(s=>{const ok=res.found.includes(s.id);
+    return `<li><details ${ok?'':'open'}><summary><span class="chip ${ok?'ok':'miss'}">${ok?'Lo encontraste':'Se te pasó'}</span>${s.title}</summary><p><b>¿Qué puede pasar?</b> ${s.why}</p><p><b>Lo seguro:</b> ${s.do}</p></details></li>`}).join('');
+  const last=S.li>=LEVELS.length-1;
+  show(`<section class="result"><div class="result-head ${head[2]}"><h2>${head[0]}</h2><p>${head[1]}</p>
+  <div class="stars" role="img" aria-label="${res.stars} de 3 estrellas">${[0,1,2].map(i=>star(i<res.stars)).join('')}</div>
+  <div class="stats"><div><b>${res.found.length} de ${n}</b><span>riesgos</span></div><div><b>${res.bulbs} de 3</b><span>luces</span></div><div><b>${res.score}</b><span>puntos</span></div></div>
+  <div class="btn-row" style="margin-top:0"><button class="btn" id="next" type="button">${last?'Ir a la evaluación':'Siguiente nivel'}</button><button class="btn btn-ghost" id="retry" type="button">Repetir nivel</button></div></div>
+  <h3 class="sec">Repaso del nivel</h3><ul class="review">${rows}</ul></section>`);
+  $('#next').addEventListener('click',()=>last?startQuiz():showIntro(S.li+1));
+  $('#retry').addEventListener('click',()=>showIntro(S.li));
+}
+
+/* ---------- evaluación ---------- */
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+function startQuiz(){
+  S.quiz={i:0,right:0,wrongTopics:[],items:QUIZ.map(q=>{const idx=shuffle(q.o.map((_,k)=>k));return {q,idx,pick:null}})};
+  showQ();
+}
+function showQ(){
+  const Q=S.quiz,it=Q.items[Q.i],letters=['A','B','C','D'];
+  show(`<section class="quiz"><span class="pill">Evaluación</span><h2>Pregunta ${Q.i+1} de ${QUIZ.length}</h2>
+  <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="${QUIZ.length}" aria-valuenow="${Q.i}"><i style="width:${Q.i/QUIZ.length*100}%"></i></div>
+  <p class="qtext">${it.q.q}</p>
+  <div class="opts" id="opts">${it.idx.map((k,p)=>`<button class="opt" type="button" data-k="${k}"><span class="k">${letters[p]}</span><span>${it.q.o[k]}</span></button>`).join('')}</div>
+  <div id="fb"></div></section>`);
+  $('#opts').addEventListener('click',e=>{
+    const b=e.target.closest('.opt');if(!b||it.pick!==null)return;
+    it.pick=+b.dataset.k;const ok=it.pick===it.q.c;
+    if(ok){Q.right++;sfx.ok()}else{Q.wrongTopics.push(it.q.t);sfx.bad()}
+    document.querySelectorAll('.opt').forEach(x=>{x.disabled=true;if(+x.dataset.k===it.q.c)x.classList.add('right');else if(x===b)x.classList.add('wrong')});
+    const last=Q.i>=QUIZ.length-1;
+    $('#fb').innerHTML=`<div class="panel explain"><h4 style="margin:0 0 4px">${ok?'¡Correcto!':'Casi'}</h4><p>${it.q.e}</p><div class="btn-row"><button class="btn" id="nq" type="button">${last?'Ver mi resultado':'Siguiente'}</button></div></div>`;
+    $('#nq').focus();
+    $('#nq').addEventListener('click',()=>{if(last)showFinal();else{Q.i++;showQ()}});
+  });
+}
+
+/* ---------- resultado final ---------- */
+function showFinal(){
+  const total=LEVELS.reduce((a,L)=>a+NSP(L),0);
+  const found=S.best.reduce((a,r)=>a+(r?r.found.length:0),0);
+  const pts=S.best.reduce((a,r)=>a+(r?r.score:0),0);
+  const stars=S.best.reduce((a,r)=>a+(r?r.stars:0),0);
+  const qr=S.quiz.right,qn=QUIZ.length;
+  const pct=(found/total*.5+qr/qn*.5)*100;
+  const rank=pct>=85?'Guardián de las luces':(pct>=65?'Aprendiz seguro':'Explorador en entrenamiento');
+  const msg=pct>=85?'Reconoces los riesgos y sabes cómo actuar. Cuéntaselo a tu familia y a tus amigos.':(pct>=65?'Vas muy bien. Repasa los puntos de abajo y vuelve a jugar para subir de rango.':'Ya diste el primer paso. Repasa lo que se te pasó y vuelve a intentarlo.');
+  const missed=[];LEVELS.forEach((L,i)=>{const r=S.best[i];if(r)r.missed.forEach(id=>{const s=L.spots.find(x=>x.id===id);missed.push(`<li>${s.title}: ${s.do}</li>`)})});
+  const topics=[...new Set(S.quiz.wrongTopics)];
+  const name=S.name||'Jugador';
+  const text=`Soy ${name} y saqué el rango "${rank}" en ¡Que no se te vayan las luces!: ${found} de ${total} riesgos encontrados y ${qr} de ${qn} en la evaluación.`;
+  show(`<section class="result"><div class="diploma">${chispa('chispa')}<p class="small">Diploma de seguridad eléctrica</p><p class="small">Se otorga a</p><div class="name">${esc(name)}</div>
+  <div class="rank">${rank}</div><p>${msg}</p>
+  <div class="stats" style="margin-top:14px"><div><b>${found} de ${total}</b><span>riesgos</span></div><div><b>${qr} de ${qn}</b><span>evaluación</span></div><div><b>${stars} de 9</b><span>estrellas</span></div></div>
+  <p class="small">Puntos: ${pts} · Modo ${MODES[S.mode].label}</p></div>
+  <h3 class="sec">Para repasar</h3>
+  ${missed.length?`<ul class="review" style="padding-left:18px;list-style:disc;display:block">${missed.join('')}</ul>`:'<p>No se te pasó ningún riesgo. ¡Excelente!</p>'}
+  ${topics.length?`<p style="margin-top:10px"><b>Temas de la evaluación por reforzar:</b> ${topics.join(', ')}.</p>`:''}
+  <div class="btn-row"><button class="btn" id="again" type="button">Jugar de nuevo</button><button class="btn btn-ghost" id="copy" type="button">Copiar mi resultado</button></div>
+  <div id="copyOut" aria-live="polite"></div>
+  <p class="foot">Mensaje clave: si ves un riesgo eléctrico, no lo toques, aléjate y avisa a un adulto. En una emergencia en Colombia, llama al 123.</p></section>`);
+  $('#again').addEventListener('click',showStart);
+  $('#copy').addEventListener('click',async()=>{
+    const out=$('#copyOut');
+    try{await navigator.clipboard.writeText(text);out.innerHTML='<p class="copymsg">Resultado copiado.</p>'}
+    catch(e){out.innerHTML=`<textarea class="copybox" readonly id="ctext">${esc(text)}</textarea>`;const t=$('#ctext');t.focus();t.select()}
+  });
+}
+
+
+window.CS_G1={start:showStart,stop:function(){stopTimer();P=null;sheet.hidden=true;sheetCb=null}};
+})();
+(function(){
+'use strict';
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+const MODES={
+  explorer:{label:'Explorador',speed:185,gap:300,maxHaz:1,haz:.75,luces:5,run:9},
+  engineer:{label:'Ingeniero',speed:250,gap:230,maxHaz:2,haz:1,luces:3,run:8}
+};
+const TRAMOS=['Salida del desfile','El parque del barrio','La calle después del aguacero','La fiesta de la cuadra'];
+
+/* 8 paradas: cada una es una situación real y una pregunta de evaluación */
+const GATES=[
+{n:'La carroza con chispas',t:'La carroza más brillante del desfile trae cables pelados colgando y suelta chispas. La gente se acerca a tomarse fotos.',
+ o:['Me acerco rápido, solo es una foto','Me alejo y aviso a los organizadores y a un adulto','Aparto el cable con el palo de mi banderín'],c:1,
+ e:'Un cable pelado con chispas puede dar un choque fuerte o causar un incendio. No se toca, ni siquiera con objetos. Aléjate y avisa a quien pueda desconectar la carroza.',topic:'Cables pelados'},
+{n:'Banderines en el poste',t:'Tu primo quiere trepar al poste de la esquina para colgar banderines de colores del Carnaval.',
+ o:['Lo ayudo a subir con una escalera de metal','Le digo que no: nunca se trepa a un poste ni se cuelga nada de la red','Colgamos los banderines de los cables, así quedan más altos'],c:1,
+ e:'Los postes y los cables llevan electricidad. Cuelga la decoración en estructuras propias, lejos de la red, y nunca trepes a un poste.',
+ tech:'Cerca de líneas de alta tensión la corriente puede saltar por el aire (arco eléctrico) sin que toques el cable.',topic:'Postes y redes'},
+{n:'La cometa del parque',t:'En el parque, una niña eleva su cometa justo debajo de los cables del poste. El hilo se acerca a la red.',
+ o:['Le pido que la baje y la eleve en una zona abierta, lejos de los cables','Le ayudo a halar el hilo para que no se enrede','Le suelto más hilo para que la cometa pase por encima de los cables'],c:0,
+ e:'El hilo puede tocar los cables y llevar la corriente hasta tus manos, sobre todo si está mojado o tiene partes metálicas. Las cometas se elevan en espacios abiertos.',topic:'Cometas'},
+{n:'El enredo del puesto de comidas',t:'Un puesto de comidas tiene una conexión improvisada: cables sueltos enredados en el poste para sacar luz.',
+ o:['Es práctico, me conecto yo también','Lo reporto a un adulto y a la empresa de energía, y no lo toco','Lo desenredo para ordenarlo'],c:1,
+ e:'Las conexiones improvisadas sobrecargan la red y pueden electrocutar a quien las toque. Solo sirven las conexiones hechas por la empresa de energía.',topic:'Conexiones ilegales'},
+{n:'El cable en el charco',t:'Llovió fuerte. En la calle por donde pasa el desfile hay un cable de energía caído dentro de un charco.',
+ o:['Me quedo lejos, no dejo pasar a nadie y llamo al 123 y a la empresa de energía','Lo aparto con una escoba de madera','Paso corriendo por el borde del charco'],c:0,
+ e:'Un cable caído puede tener corriente aunque no haga chispas, y el agua la reparte por el suelo. Quédate lejos, evita que otros se acerquen y pide ayuda.',
+ tech:'Cerca de un cable caído el suelo mojado tiene distintos voltajes de un punto a otro (voltaje de paso). Un paso largo puede hacer pasar corriente por tus piernas.',topic:'Cable caído'},
+{n:'Manos mojadas',t:'Te mojaste las manos con la lluvia y vas a enchufar el equipo de sonido. Tu amiga dice: "Sécate primero". ¿Por qué tiene razón?',
+ o:['Con la piel mojada baja la resistencia y, con el mismo voltaje, pasa más corriente (I = V / R)','Porque el agua es pesada y puede romper el enchufe','No tiene razón: el agua no cambia nada'],c:0,
+ e:'La corriente es I = V / R. Si la resistencia de tu cuerpo baja porque estás mojado, con el mismo voltaje pasa más corriente y el choque es más peligroso.',
+ tech:'Con la piel mojada R puede bajar a unos 1.000 Ω. A 120 V: I = 120 / 1.000 = 0,12 A (120 mA), una corriente que puede ser mortal.',topic:'Ley de Ohm'},
+{n:'El adaptador de la fiesta',t:'En la fiesta de la cuadra conectaron en un solo adaptador el equipo de sonido, la nevera, un ventilador y las luces.',
+ o:['Está bien, mientras todo entre','Pido repartir los aparatos en tomas distintas y que un electricista revise la instalación','Pongo otro adaptador encima para tener más enchufes'],c:1,
+ e:'Cada toma y cada cable soportan una corriente máxima. Si la superas, se calientan y puede haber un incendio.',
+ tech:'Potencia: P = V × I. Una nevera, un equipo de sonido y un ventilador pueden sumar varios amperios, más de lo que aguanta un adaptador de varios cables.',topic:'Sobrecarga'},
+{n:'Un amigo pegado al cable',t:'En la fiesta, un amigo toca un cable pelado y queda pegado, temblando.',
+ o:['Lo jalo con las manos para soltarlo','Pido ayuda a gritos y llamo al 123. Un adulto corta la energía solo si puede hacerlo con seguridad','Le echo agua para que reaccione'],c:1,
+ e:'Si tocas a la víctima, la corriente también pasa por ti. Primero pide ayuda y llama al 123. Después de cualquier choque, aunque la quemadura parezca pequeña, hay que ir al médico.',topic:'Emergencias'}
+];
+const HAZ={
+ cable:{name:'Cable caído',msg:'Un cable caído puede tener corriente aunque no haga chispas. Aléjate y llama al 123.'},
+ charco:{name:'Charco con cable',msg:'El agua reparte la corriente por el suelo. No te acerques a charcos con cables.'},
+ trafo:{name:'Transformador abierto',msg:'Las cajas de energía abiertas tienen partes con corriente. Mantén distancia y avisa a un adulto.'},
+ enredo:{name:'Enredo de cables',msg:'Los cables sueltos o improvisados pueden dar choques. No los toques y repórtalos.'}
+};
+const HKEYS=Object.keys(HAZ);
+
+/* ---------- estado ---------- */
+const S={name:'',mode:'explorer',char:'plumas'};
+let G=null,raf=0,sheetCb=null,muted=false,AC=null;
+const screen=$('#screen'),sheet=$('#sheet2');
+function show(h){stopLoop();screen.innerHTML='<div class="g2">'+h+'</div>';window.scrollTo(0,0)}
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+
+/* ---------- sonido ---------- */
+function tone(seq){
+  if(window.CS&&CS.muted)return;
+  try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();let t=AC.currentTime;
+    seq.forEach(([f,d])=>{const o=AC.createOscillator(),g=AC.createGain();o.type='triangle';o.frequency.value=f;
+      g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.16,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+d);
+      o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+d+.02);t+=d*.9});}catch(e){}
+}
+const sfx={pick:()=>tone([[880,.07],[1175,.1]]),ok:()=>tone([[523,.1],[659,.1],[784,.1],[1047,.24]]),zap:()=>tone([[180,.08],[120,.2]]),bad:()=>tone([[320,.14],[210,.24]]),lose:()=>tone([[330,.18],[247,.18],[196,.32]])};
+
+/* ---------- piezas de interfaz ---------- */
+const chispa=(cls='chispa')=>`<svg class="${cls}" viewBox="0 0 160 200" aria-hidden="true"><use href="#chispa"/></svg>`;
+const bulbSvg=on=>`<svg class="bulb ${on?'':'off'}" viewBox="0 0 24 30" aria-hidden="true"><use href="#bulbico"/></svg>`;
+
+function showStart(){
+  if(window.CS){S.name=CS.name||S.name;S.mode=CS.mode||S.mode;S.char=CS.char||S.char}
+  show(`<section class="hero">
+  <div>
+    <p class="kicker">Juego de seguridad eléctrica</p>
+    <h1>Carnaval <span>sin sustos</span></h1>
+    <p class="sub">¡Que no se te vayan las luces!</p>
+    <p class="lead">Baila por el desfile, esquiva los cables peligrosos y recoge bombillos. En cada parada del recorrido te toca decidir qué hacer ante un riesgo eléctrico de verdad.</p>
+    <form class="form" id="startForm" autocomplete="off">
+      <div class="field"><label class="lbl" for="pname">¿Cómo te llamas?</label><input type="text" id="pname" maxlength="24" placeholder="Tu nombre" value="${esc(S.name)}"></div>
+      <div class="field"><span class="lbl" id="charLbl">Elige tu personaje</span>
+        <div class="modes" role="radiogroup" aria-labelledby="charLbl">
+          <label class="mode"><input type="radio" name="char" value="plumas" ${S.char==='plumas'?'checked':''}><span><span class="row"><svg viewBox="0 0 64 72" aria-hidden="true"><g transform="translate(32,34)"><ellipse cy="-18" rx="5" ry="16" fill="#e6007e" transform="rotate(-50)"/><ellipse cy="-20" rx="5" ry="18" fill="#00b3c4" transform="rotate(-22)"/><ellipse cy="-21" rx="5" ry="18" fill="#ffc400" stroke="#24103f" stroke-width="1.5"/><ellipse cy="-20" rx="5" ry="18" fill="#ff6a13" transform="rotate(22)"/><ellipse cy="-18" rx="5" ry="16" fill="#8e4dff" transform="rotate(50)"/></g><circle cx="32" cy="40" r="14" fill="#c68642" stroke="#24103f" stroke-width="2"/><path d="M19 37Q32 29 45 37L42 44Q32 38 22 44Z" fill="#ffc400" stroke="#24103f" stroke-width="2"/><path d="M25 50Q32 56 39 50" fill="none" stroke="#24103f" stroke-width="2.5" stroke-linecap="round"/></svg><span><b>Bailarín de plumas</b><small>Penacho y lentejuelas.</small></span></span></span></label>
+          <label class="mode"><input type="radio" name="char" value="marimonda" ${S.char==='marimonda'?'checked':''}><span><span class="row"><svg viewBox="0 0 64 72" aria-hidden="true"><ellipse cx="14" cy="42" rx="7" ry="11" fill="#ff6a13" stroke="#24103f" stroke-width="2" transform="rotate(20 14 42)"/><ellipse cx="50" cy="42" rx="7" ry="11" fill="#ff6a13" stroke="#24103f" stroke-width="2" transform="rotate(-20 50 42)"/><path d="M19 32L32 4L45 32Z" fill="#e6007e" stroke="#24103f" stroke-width="2" stroke-linejoin="round"/><path d="M24 22L40 22L43 31L21 31Z" fill="#ffc400"/><circle cx="32" cy="5" r="4" fill="#ffc400" stroke="#24103f" stroke-width="2"/><circle cx="32" cy="42" r="14" fill="#f6c9a0" stroke="#24103f" stroke-width="2"/><circle cx="26" cy="38" r="4.5" fill="#fff" stroke="#24103f" stroke-width="1.5"/><circle cx="38" cy="38" r="4.5" fill="#fff" stroke="#24103f" stroke-width="1.5"/><circle cx="26" cy="38.5" r="1.8" fill="#24103f"/><circle cx="38" cy="38.5" r="1.8" fill="#24103f"/><ellipse cx="32" cy="52" rx="4.5" ry="11" fill="#ff6a13" stroke="#24103f" stroke-width="2"/><circle cx="32" cy="62" r="5" fill="#e6007e" stroke="#24103f" stroke-width="2"/></svg><span><b>Marimonda</b><small>Nariz larga y orejas grandes.</small></span></span></span></label>
+        </div></div>
+      <div class="field"><span class="lbl" id="modeLbl">Elige tu modo</span>
+        <div class="modes" role="radiogroup" aria-labelledby="modeLbl">
+          <label class="mode"><input type="radio" name="mode" value="explorer" ${S.mode==='explorer'?'checked':''}><span><b>Explorador</b><small>Para niños. Ritmo tranquilo y 5 luces.</small></span></label>
+          <label class="mode"><input type="radio" name="mode" value="engineer" ${S.mode==='engineer'?'checked':''}><span><b>Ingeniero</b><small>Para adolescentes. Más rápido, 3 luces y datos técnicos.</small></span></label>
+        </div></div>
+      <div><button class="btn" type="submit">Salir al desfile</button></div>
+    </form>
+  </div>
+  <div class="hero-art"><div class="glow">${chispa()}</div><p class="bubble">Soy Chispa. Corre conmigo y que no se te vayan las luces.</p></div>
+</section>
+<section class="how" aria-label="Cómo se juega">
+  <div class="card"><div class="n">1</div><h3>Corre y esquiva</h3><p>Cambia de carril con las flechas, deslizando el dedo o tocando a un lado. Evita cables, charcos y cajas abiertas, y recoge bombillos.</p></div>
+  <div class="card"><div class="n">2</div><h3>Decide en cada parada</h3><p>Son 8 paradas con situaciones reales. Elige la acción segura. Cada error cuesta una luz.</p></div>
+  <div class="card"><div class="n">3</div><h3>Recibe tu diploma</h3><p>Al final ves cuánto aprendiste y qué te falta repasar.</p></div>
+</section>
+<p class="foot">Inspirado en la campaña “Que no se te vayan las luces” del CIDET, la Universidad del Norte y el grupo IEEE. En una emergencia en Colombia, llama al 123.</p>`);
+  $('#startForm').addEventListener('submit',e=>{e.preventDefault();S.name=$('#pname').value.trim();S.char=(document.querySelector('input[name=char]:checked')||{}).value||'plumas';S.mode=(document.querySelector('input[name=mode]:checked')||{}).value||'explorer';CS.name=S.name;CS.mode=S.mode;CS.char=S.char;startGame()});
+}
+
+/* ================= MOTOR DEL DESFILE ================= */
+const W=400,H=640,LX=[100,200,300],PY=520;
+const PAL=['#e6007e','#00b3c4','#ffc400','#ff6a13','#8e4dff'];
+const SKIN=['#c68642','#8d5524','#e0ac69','#f1c27d'];
+const WORLD=[{road:'#3b3550',side:'#33175c'},{road:'#4b4a58',side:'#2e8a4c'},{road:'#25304f',side:'#1c2540'},{road:'#241238',side:'#180a2c'}];
+const hash=n=>{const x=Math.sin(n*127.1+311.7)*43758.5453;return x-Math.floor(x)};
+let cv=null,ctx=null,toastTm=0;
+
+function startGame(keep){
+  const M=MODES[S.mode];
+  G={M,lane:1,x:200,speed:0,target:M.speed,off:0,objs:[],spawnT:.9,segT:0,gi:0,state:'run',luces:M.luces,max:M.luces,score:0,bulbs:0,inv:0,
+     hits:{},answers:[],arch:0,parts:[],time:0,flash:0,shake:0,react:0,reactOk:true,paused:false,
+     order:GATES.map(g=>({g,idx:shuffle([0,1,2])})),rain:[],last:0,retries:0};
+  if(keep){G.gi=keep.gi;G.answers=keep.answers;G.hits=keep.hits;G.score=keep.score;G.bulbs=keep.bulbs;G.retries=keep.retries+1}
+  for(let i=0;i<46;i++)G.parts.push({amb:1,x:Math.random()*W,y:Math.random()*H,vy:30+Math.random()*50,vx:(Math.random()-.5)*20,c:PAL[i%5],r:Math.random()*6,w:3+Math.random()*3});
+  for(let i=0;i<60;i++)G.rain.push({x:Math.random()*W,y:Math.random()*H,v:500+Math.random()*300});
+  const chev=d=>`<svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><path d="${d}" fill="none" stroke="#24103f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  show(`<div class="stage">
+  <div class="hud"><div class="tramo"><small id="hStop"></small><b id="hTramo"></b></div><div class="bulbs" id="bulbs" role="img" aria-label="Luces"></div>
+  <div class="stat">Bombillos <b id="hB">0</b><br>Puntos <b id="hS">0</b></div></div>
+  <div class="canvaswrap"><canvas id="cv" role="img" aria-label="Desfile de Carnaval: cambia de carril para esquivar cables y recoger bombillos"></canvas><div class="toast" id="toast" role="status" aria-live="polite"></div></div>
+  <div class="controls"><button class="arrow" id="bL" type="button" aria-label="Mover a la izquierda">${chev('M15 5L8 12L15 19')}</button>
+  <button class="icon-btn" id="pauseBtn" type="button">Pausa</button>
+  <button class="arrow" id="bR" type="button" aria-label="Mover a la derecha">${chev('M9 5L16 12L9 19')}</button></div>
+  <p class="help">Flechas del teclado, botones, un deslizamiento o un toque a cada lado para cambiar de carril.</p></div>`);
+  cv=$('#cv');const dpr=Math.min(window.devicePixelRatio||1,2);cv.width=W*dpr;cv.height=H*dpr;ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
+  let sx=0;
+  cv.addEventListener('pointerdown',e=>{sx=e.clientX});
+  cv.addEventListener('pointerup',e=>{const dx=e.clientX-sx;if(Math.abs(dx)>28)move(dx>0?1:-1);else{const r=cv.getBoundingClientRect();move(e.clientX<r.left+r.width/2?-1:1)}});
+  $('#bL').addEventListener('click',()=>move(-1));$('#bR').addEventListener('click',()=>move(1));
+  $('#pauseBtn').addEventListener('click',e=>{if(G.state==='gate'||G.state==='over')return;G.paused=!G.paused;e.currentTarget.textContent=G.paused?'Seguir':'Pausa'});
+  updateHUD();toast(keep?`<b>¡Otra vez a bailar!</b> Recuperaste todas tus luces.`:`<b>${TRAMOS[0]}.</b> ¡A bailar! Esquiva los cables y recoge bombillos.`,3600);
+  G.last=performance.now();raf=requestAnimationFrame(loop);
+}
+document.addEventListener('keydown',e=>{
+  if(!G||!cv||!document.body.contains(cv))return;
+  if(e.key==='ArrowLeft'||e.key==='a'||e.key==='A'){move(-1);e.preventDefault()}
+  else if(e.key==='ArrowRight'||e.key==='d'||e.key==='D'){move(1);e.preventDefault()}
+});
+function move(d){if(!G||G.paused||(G.state!=='run'&&G.state!=='brake'&&G.state!=='leave'))return;G.lane=Math.max(0,Math.min(2,G.lane+d))}
+function stopLoop(){if(raf){cancelAnimationFrame(raf);raf=0}}
+function toast(html,ms=3000){const t=$('#toast');if(!t)return;t.innerHTML=html;t.classList.add('on');clearTimeout(toastTm);toastTm=setTimeout(()=>t.classList.remove('on'),ms)}
+function updateHUD(){
+  if(!G)return;
+  const b=$('#bulbs');if(!b)return;
+  b.innerHTML=Array.from({length:G.max},(_,i)=>bulbSvg(i<G.luces)).join('');
+  $('#hStop').textContent='Parada '+Math.min(G.gi+1,GATES.length)+' de '+GATES.length;
+  $('#hTramo').textContent=TRAMOS[Math.min(3,Math.floor(G.gi/2))];
+  $('#hB').textContent=G.bulbs;$('#hS').textContent=G.score;
+}
+function loop(ts){
+  raf=requestAnimationFrame(loop);
+  if(!G||!ctx)return;
+  const dt=Math.min(.05,(ts-G.last)/1000||0);G.last=ts;
+  if(!G.paused)update(dt);
+  draw();
+}
+
+/* ---------- actualización ---------- */
+function update(dt){
+  G.time+=dt;G.inv=Math.max(0,G.inv-dt);G.flash=Math.max(0,G.flash-dt*2.2);G.shake=Math.max(0,G.shake-dt*3);G.react=Math.max(0,G.react-dt);
+  G.x+=(LX[G.lane]-G.x)*Math.min(1,dt*14);
+  G.speed+=(G.target-G.speed)*Math.min(1,dt*3);
+  const mv=G.speed*dt;G.off+=mv;
+  G.objs.forEach(o=>{o.y+=mv;if(o.fade!==undefined)o.fade-=dt});
+  G.objs=G.objs.filter(o=>o.y<H+80&&!o.dead&&(o.fade===undefined||o.fade>0));
+  G.parts.forEach(p=>{
+    if(p.amb){p.y+=p.vy*dt+mv*.15;p.x+=p.vx*dt;p.r+=dt*4;if(p.y>H+10){p.y=-10;p.x=Math.random()*W}}
+    else{p.life-=dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=260*dt;p.r+=dt*6}
+  });
+  G.parts=G.parts.filter(p=>p.amb||p.life>0);
+  G.rain.forEach(r=>{r.y+=r.v*dt;r.x-=r.v*dt*.18;if(r.y>H){r.y=-10;r.x=Math.random()*(W+60)}});
+  if(G.state==='run'){
+    G.segT+=dt;
+    G.spawnT-=dt;
+    if(G.spawnT<=0)spawnRow();
+    collide();
+    if(G.state==='run'&&G.segT>=G.M.run){G.state='brake';G.target=0;G.objs.forEach(o=>{if(o.y<PY+30)o.fade=.5})}
+  }else if(G.state==='brake'){
+    G.arch=Math.min(1,G.arch+dt*.9);
+    if(G.arch>=1&&G.speed<8){G.state='gate';G.speed=0;openGate()}
+  }else if(G.state==='leave'){
+    G.arch=Math.max(0,G.arch-dt*1.4);
+    if(G.arch<=0){G.state='run';G.segT=0;G.spawnT=.7}
+  }
+}
+function spawnRow(){
+  G.spawnT=G.M.gap/Math.max(G.speed,90);
+  const lanes=[0,1,2],nh=1+(G.M.maxHaz>1&&Math.random()<.5?1:0),hl=Math.random()<G.M.haz?shuffle(lanes).slice(0,nh):[];
+  hl.forEach(l=>G.objs.push({k:'haz',kind:HKEYS[Math.floor(Math.random()*HKEYS.length)],lane:l,y:-60,t:Math.random()*6}));
+  const free=lanes.filter(l=>!hl.includes(l));
+  if(Math.random()<.85){const l=free[Math.floor(Math.random()*free.length)],n=2+Math.floor(Math.random()*3);
+    for(let i=0;i<n;i++)G.objs.push({k:'bulb',lane:l,y:-120-i*48,t:Math.random()*6})}
+}
+function burst(x,y,cols,n,spd){for(let i=0;i<n;i++){const a=Math.random()*6.283,v=spd*(.4+Math.random());G.parts.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-80,life:.7+Math.random()*.6,c:cols[i%cols.length],r:Math.random()*6,w:4+Math.random()*3})}}
+function collide(){
+  for(const o of G.objs){
+    if(o.dead||o.fade!==undefined)continue;
+    if(Math.abs(o.y-PY)<30&&Math.abs(LX[o.lane]-G.x)<44){
+      if(o.k==='bulb'){
+        o.dead=true;G.bulbs++;G.score+=10;sfx.pick();burst(LX[o.lane],o.y,['#ffe66b','#fff'],6,120);
+        if(G.bulbs%10===0&&G.luces<G.max){G.luces++;toast('<b>¡Luz recuperada!</b> Juntaste 10 bombillos.')}
+        updateHUD();
+      }else if(G.inv<=0){
+        o.dead=true;G.luces--;G.inv=1.8;G.flash=1;G.shake=1;G.hits[o.kind]=(G.hits[o.kind]||0)+1;
+        sfx.zap();burst(G.x,PY-10,['#ffd21f','#fff','#ff6a13'],18,260);
+        toast(`<b>¡Chispazo!</b> ${HAZ[o.kind].msg}`,3600);updateHUD();
+        if(G.luces<=0){G.state='over';sfx.lose();setTimeout(()=>showResult(false),900)}
+        return;
+      }
+    }
+  }
+}
+
+/* ---------- paradas ---------- */
+function openGate(){
+  const item=G.order[G.gi],g=item.g,L=['A','B','C'];
+  $('#sheetTop2').className='sheet-top';
+  $('#sheetTop2').innerHTML=`<span>Parada ${G.gi+1} de ${GATES.length}</span><span>${TRAMOS[Math.min(3,Math.floor(G.gi/2))]}</span>`;
+  $('#sheetBody2').innerHTML=`<h3 id="sheetTitle">${g.n}</h3><div class="scn">${chispa('')}<p>${g.t}</p></div>
+  <div class="opts" id="gopts">${item.idx.map((k,p)=>`<button class="opt" type="button" data-k="${k}"><span class="k">${L[p]}</span><span>${g.o[k]}</span></button>`).join('')}</div><div id="gfb"></div>`;
+  $('#gopts').addEventListener('click',onAnswer);
+  sheet.hidden=false;
+}
+function onAnswer(e){
+  const b=e.target.closest('.opt');if(!b||b.disabled)return;
+  const item=G.order[G.gi],g=item.g,pick=+b.dataset.k,ok=pick===g.c;
+  document.querySelectorAll('#gopts .opt').forEach(x=>{x.disabled=true;if(+x.dataset.k===g.c)x.classList.add('right');else if(x===b)x.classList.add('wrong')});
+  G.answers.push({gi:G.gi,ok,topic:g.topic,n:g.n});
+  if(ok){G.score+=150;sfx.ok();burst(G.x,PY-30,PAL,40,300);G.react=1.2;G.reactOk=true}
+  else{G.luces--;G.flash=1;sfx.bad();G.react=1;G.reactOk=false}
+  $('#sheetTop2').className='sheet-top '+(ok?'ok':'bad');
+  const last=G.gi>=GATES.length-1;
+  $('#gfb').innerHTML=`<div class="box-do"><h4>${ok?'¡Muy bien!':'Casi. Esto es lo seguro'}${ok?'':'  ·  pierdes una luz'}</h4><p>${g.e}</p></div>
+  ${(S.mode==='engineer'&&g.tech)?`<div class="box-tech"><h4>Dato técnico</h4><p>${g.tech}</p></div>`:''}
+  <div class="btn-row" style="margin-top:12px"><button class="btn" id="gnext" type="button">${G.luces<=0?'Ver qué pasó':(last?'Llegar a la meta':'Seguir bailando')}</button></div>`;
+  updateHUD();
+  const nx=$('#gnext');nx.focus();
+  nx.addEventListener('click',()=>{
+    sheet.hidden=true;
+    G.gi++;updateHUD();
+    if(G.gi>=GATES.length){G.state='over';setTimeout(()=>showResult(true),600);return}
+    if(G.luces<=0){G.state='over';sfx.lose();showResult(false);return}
+    G.state='leave';G.target=G.M.speed;
+    if(G.gi%2===0)toast(`<b>${TRAMOS[Math.floor(G.gi/2)]}.</b> El desfile sigue.`,3400);
+  });
+}
+
+/* ---------- dibujo ---------- */
+function draw(){
+  ctx.save();
+  if(G.shake>0)ctx.translate((Math.random()-.5)*9*G.shake,(Math.random()-.5)*9*G.shake);
+  const tr=Math.min(3,Math.floor(G.gi/2));
+  drawWorld(tr);
+  G.objs.forEach(o=>{ctx.save();if(o.fade!==undefined)ctx.globalAlpha=Math.max(0,o.fade/.5);o.k==='bulb'?drawBulb(o):drawHaz(o);ctx.restore()});
+  drawArch();
+  drawDancer();
+  G.parts.forEach(p=>{ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.r);ctx.globalAlpha=p.amb?.75:Math.min(1,p.life*2);ctx.fillStyle=p.c;ctx.fillRect(-p.w/2,-p.w/4,p.w,p.w/2);ctx.restore()});
+  if(tr===2){ctx.strokeStyle='rgba(190,220,255,.5)';ctx.lineWidth=1.5;ctx.beginPath();G.rain.forEach(r=>{ctx.moveTo(r.x,r.y);ctx.lineTo(r.x+5,r.y-16)});ctx.stroke()}
+  drawFlags();
+  if(G.flash>0){ctx.fillStyle=`rgba(255,50,50,${G.flash*.3})`;ctx.fillRect(0,0,W,H)}
+  if(G.paused){ctx.fillStyle='rgba(20,7,42,.7)';ctx.fillRect(0,0,W,H);ctx.fillStyle='#ffc400';ctx.font='44px "Titan One",Impact,sans-serif';ctx.textAlign='center';ctx.fillText('PAUSA',W/2,H/2)}
+  ctx.restore();
+}
+function drawWorld(tr){
+  const T=WORLD[tr];
+  ctx.fillStyle=T.side;ctx.fillRect(0,0,W,H);
+  const base=Math.floor(G.off/80),ph=G.off%80;
+  for(let k=0;k<10;k++){const y=ph+(k-1)*80,idx=base-k;decor(tr,25,y,idx*2);decor(tr,375,y,idx*2+1)}
+  ctx.fillStyle=T.road;ctx.fillRect(50,0,300,H);
+  if(tr===2){ctx.fillStyle='rgba(130,190,255,.22)';for(let k=0;k<10;k++){const y=ph+(k-1)*80,idx=base-k;ctx.beginPath();ctx.ellipse(70+hash(idx)*260,y+20,26+hash(idx+9)*18,9,0,0,6.3);ctx.fill()}}
+  ctx.fillStyle='#fff';ctx.fillRect(46,0,4,H);ctx.fillRect(350,0,4,H);
+  ctx.fillStyle='rgba(255,255,255,.55)';
+  for(let y=-80+G.off%80;y<H;y+=80){ctx.fillRect(148,y,4,38);ctx.fillRect(248,y,4,38)}
+}
+function decor(tr,x,y,s){
+  const h1=hash(s),h2=hash(s+.5),h3=hash(s+.9);
+  if(tr===0||tr===3){
+    for(let j=0;j<2;j++){
+      const px=x+(hash(s+j*3)-.5)*18,py=y+j*38+h2*8,col=PAL[Math.floor(hash(s+j*7)*5)],up=hash(s+j*5)>.5;
+      ctx.fillStyle=tr===3?'#0d0420':col;ctx.beginPath();ctx.ellipse(px,py+8,9,12,0,0,6.3);ctx.fill();
+      ctx.fillStyle=SKIN[Math.floor(hash(s+j)*4)];ctx.beginPath();ctx.arc(px,py-6,6,0,6.3);ctx.fill();
+      ctx.strokeStyle=SKIN[0];ctx.lineWidth=3;ctx.lineCap='round';ctx.beginPath();
+      if(up){ctx.moveTo(px-8,py+2);ctx.lineTo(px-12,py-14);ctx.moveTo(px+8,py+2);ctx.lineTo(px+12,py-14)}
+      ctx.stroke();
+      if(h3>.4){ctx.fillStyle=PAL[(Math.floor(h1*5)+j)%5];ctx.beginPath();ctx.moveTo(px-6,py-10);ctx.lineTo(px,py-24);ctx.lineTo(px+6,py-10);ctx.fill()}
+    }
+    if(tr===3){const c=PAL[Math.floor(h1*5)],lx=x+(h2-.5)*10,ly=y+20;
+      const g=ctx.createRadialGradient(lx,ly,1,lx,ly,22);g.addColorStop(0,c);g.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g;ctx.fillRect(lx-24,ly-24,48,48);
+      ctx.fillStyle=c;ctx.beginPath();ctx.arc(lx,ly,7,0,6.3);ctx.fill()}
+  }else if(tr===1){
+    ctx.fillStyle='#6b4423';ctx.fillRect(x-3,y+14,6,14);
+    ctx.fillStyle='#1f6b3a';ctx.beginPath();ctx.arc(x,y+6,17+h1*5,0,6.3);ctx.fill();
+    ctx.fillStyle='#2f9a54';ctx.beginPath();ctx.arc(x-5,y+1,8,0,6.3);ctx.fill();
+    ctx.fillStyle=PAL[Math.floor(h2*5)];ctx.beginPath();ctx.arc(x+(h3-.5)*30,y+54,3,0,6.3);ctx.fill();
+  }else{
+    ctx.fillStyle='#2b3560';ctx.fillRect(x-22,y-4,44,76);ctx.fillStyle='#161d3a';ctx.fillRect(x-22,y-4,44,5);
+    for(let r=0;r<2;r++)for(let c=0;c<2;c++){ctx.fillStyle=hash(s+r*3+c*7)>.4?'#ffd86b':'#3b4778';ctx.fillRect(x-15+c*18,y+8+r*28,11,16)}
+  }
+}
+function drawBulb(o){
+  const x=LX[o.lane],y=o.y+Math.sin(G.time*5+o.t)*3;
+  const g=ctx.createRadialGradient(x,y,2,x,y,24);g.addColorStop(0,'rgba(255,230,107,.9)');g.addColorStop(1,'rgba(255,230,107,0)');
+  ctx.fillStyle=g;ctx.fillRect(x-26,y-26,52,52);
+  ctx.fillStyle='#ffe66b';ctx.strokeStyle='#24103f';ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(x,y-2,10,0,6.3);ctx.fill();ctx.stroke();
+  ctx.fillStyle='#9aa5b8';ctx.fillRect(x-5,y+8,10,6);ctx.strokeRect(x-5,y+8,10,6);
+}
+function spark(t,seed){
+  if(Math.sin(t*22)<-.3)return;
+  const f=Math.floor(t*14);ctx.strokeStyle='#ffd21f';ctx.lineWidth=3;ctx.lineCap='round';ctx.lineJoin='round';
+  for(let i=0;i<2;i++){const a=hash(f*3+i+seed)*6.28,r=14+hash(f+i*5+seed)*14;ctx.beginPath();const x=Math.cos(a)*r,y=Math.sin(a)*r*.6;ctx.moveTo(x,y);ctx.lineTo(x+7,y-8);ctx.lineTo(x+1,y-8);ctx.lineTo(x+9,y-18);ctx.stroke()}
+}
+function drawHaz(o){
+  const x=LX[o.lane],y=o.y,t=G.time+o.t;
+  ctx.save();ctx.translate(x,y);
+  ctx.strokeStyle=`rgba(255,70,70,${.3+.25*Math.sin(t*6)})`;ctx.lineWidth=4;ctx.beginPath();ctx.ellipse(0,0,50,32,0,0,6.3);ctx.stroke();
+  if(o.kind==='cable'){
+    ctx.strokeStyle='#111';ctx.lineWidth=7;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(-44,-2);ctx.bezierCurveTo(-20,-22,12,22,42,-6);ctx.stroke();
+    ctx.strokeStyle='#ff9a3c';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(42,-6);ctx.lineTo(52,-12);ctx.moveTo(42,-6);ctx.lineTo(53,-4);ctx.moveTo(42,-6);ctx.lineTo(50,3);ctx.stroke();
+    spark(t,1);
+  }else if(o.kind==='charco'){
+    ctx.fillStyle='#4aa8e8';ctx.beginPath();ctx.ellipse(0,2,42,22,0,0,6.3);ctx.fill();
+    ctx.fillStyle='rgba(255,255,255,.45)';ctx.beginPath();ctx.ellipse(-12,-4,14,5,-.2,0,6.3);ctx.fill();
+    ctx.strokeStyle='#111';ctx.lineWidth=6;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(-44,-24);ctx.bezierCurveTo(-30,-6,-10,12,6,4);ctx.stroke();
+    spark(t,2);
+  }else if(o.kind==='trafo'){
+    ctx.fillStyle='#7f8c8d';ctx.strokeStyle='#24103f';ctx.lineWidth=3;ctx.fillRect(-28,-24,50,46);ctx.strokeRect(-28,-24,50,46);
+    ctx.fillStyle='#95a5a6';ctx.beginPath();ctx.moveTo(22,-24);ctx.lineTo(44,-14);ctx.lineTo(44,28);ctx.lineTo(22,22);ctx.closePath();ctx.fill();ctx.stroke();
+    ctx.fillStyle='#1d2430';ctx.fillRect(-20,-16,34,30);
+    ctx.fillStyle='#ffd21f';ctx.beginPath();ctx.moveTo(-3,-14);ctx.lineTo(-13,8);ctx.lineTo(-4,8);ctx.lineTo(-8,14);ctx.lineTo(8,-6);ctx.lineTo(-1,-6);ctx.closePath();ctx.fill();
+    spark(t,3);
+  }else{
+    const cols=['#111','#c0392b','#6b4423','#111'];ctx.lineWidth=4;ctx.lineCap='round';
+    for(let i=0;i<4;i++){ctx.strokeStyle=cols[i];ctx.beginPath();ctx.moveTo(-40+i*4,-14+i*9);ctx.bezierCurveTo(-10,-34+i*10,10,26-i*8,40-i*3,-10+i*8);ctx.stroke()}
+    ctx.fillStyle='#111';ctx.beginPath();ctx.arc(0,0,7,0,6.3);ctx.fill();
+    spark(t,4);
+  }
+  ctx.restore();
+}
+function drawArch(){
+  if(G.arch<=0)return;
+  const e=1-Math.pow(1-G.arch,2),y=-80+e*210,n=Math.min(G.gi+1,GATES.length);
+  ctx.save();
+  ctx.fillStyle='#fff';ctx.fillRect(40,y,10,PY-y-10);ctx.fillRect(350,y,10,PY-y-10);
+  ctx.fillStyle='#e6007e';ctx.strokeStyle='#fff';ctx.lineWidth=4;ctx.fillRect(34,y,332,62);ctx.strokeRect(34,y,332,62);
+  ctx.fillStyle='#ffc400';ctx.font='34px "Titan One",Impact,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText('PARADA '+n,W/2,y+32);
+  for(let i=0;i<11;i++){ctx.fillStyle=PAL[i%5];ctx.beginPath();ctx.arc(52+i*29.6,y+70,6,0,6.3);ctx.fill()}
+  ctx.restore();
+}
+function drawDancer(){
+  const x=G.x,moving=G.speed>20||G.state==='run',t=G.time,ph=Math.sin(t*(moving?12:6));
+  let y=PY,bob=Math.sin(t*(moving?12:6))*3;
+  const happy=G.react>0&&G.reactOk,sad=G.react>0&&!G.reactOk;
+  if(happy)y-=Math.abs(Math.sin(t*10))*18;
+  ctx.save();
+  if(G.inv>0&&Math.floor(t*14)%2===0)ctx.globalAlpha=.4;
+  if(S.char==='marimonda'){drawMar(x,y,ph,bob,happy,sad,t);ctx.restore();return}
+  ctx.fillStyle='rgba(0,0,0,.3)';ctx.beginPath();ctx.ellipse(x,PY+36,26,8,0,0,6.3);ctx.fill();
+  ctx.strokeStyle='#24103f';ctx.lineWidth=8;ctx.lineCap='round';
+  ctx.beginPath();ctx.moveTo(x-8,y+8);ctx.lineTo(x-8+ph*7,y+32);ctx.moveTo(x+8,y+8);ctx.lineTo(x+8-ph*7,y+32);ctx.stroke();
+  ctx.fillStyle='#ffc400';ctx.beginPath();ctx.ellipse(x-8+ph*7,y+34,8,4,0,0,6.3);ctx.ellipse(x+8-ph*7,y+34,8,4,0,0,6.3);ctx.fill();
+  // brazos
+  ctx.strokeStyle=SKIN[0];ctx.lineWidth=7;
+  const ay=happy?-46:(sad?-6:-18-ph*8),by=happy?-46:(sad?-6:-18+ph*8);
+  ctx.beginPath();ctx.moveTo(x-14,y-18+bob);ctx.lineTo(x-34,y+ay+bob);ctx.moveTo(x+14,y-18+bob);ctx.lineTo(x+34,y+by+bob);ctx.stroke();
+  ctx.fillStyle='#ffc400';ctx.beginPath();ctx.arc(x-34,y+ay+bob,5,0,6.3);ctx.arc(x+34,y+by+bob,5,0,6.3);ctx.fill();
+  // cuerpo
+  ctx.fillStyle='#e6007e';ctx.beginPath();ctx.moveTo(x-14,y-26+bob);ctx.lineTo(x+14,y-26+bob);ctx.lineTo(x+24,y+14+bob);ctx.lineTo(x-24,y+14+bob);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#ffc400';ctx.fillRect(x-22,y+8+bob,44,5);
+  ctx.fillStyle='#00b3c4';for(let i=0;i<3;i++){ctx.beginPath();ctx.arc(x-8+i*8,y-12+i%2*8+bob,3,0,6.3);ctx.fill()}
+  // plumas
+  const hy=y-46+bob;
+  [-1.1,-.66,-.22,.22,.66,1.1].forEach((a,i)=>{ctx.save();ctx.translate(x,hy);ctx.rotate(a+Math.sin(t*6+i)*.05);ctx.fillStyle=PAL[i%5];ctx.strokeStyle='#24103f';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(0,-24,7,24,0,0,6.3);ctx.fill();ctx.stroke();ctx.restore()});
+  // cabeza
+  ctx.fillStyle=SKIN[0];ctx.strokeStyle='#24103f';ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(x,hy+6,14,0,6.3);ctx.fill();ctx.stroke();
+  ctx.fillStyle='#ffc400';ctx.beginPath();ctx.moveTo(x-15,hy+1);ctx.quadraticCurveTo(x,hy-7,x+15,hy+1);ctx.lineTo(x+12,hy+10);ctx.quadraticCurveTo(x,hy+3,x-12,hy+10);ctx.closePath();ctx.fill();ctx.stroke();
+  ctx.fillStyle='#24103f';ctx.beginPath();ctx.arc(x-5,hy+4,2,0,6.3);ctx.arc(x+5,hy+4,2,0,6.3);ctx.fill();
+  ctx.strokeStyle='#24103f';ctx.lineWidth=2.5;ctx.beginPath();
+  if(sad){ctx.arc(x,hy+18,5,3.5,5.9)}else{ctx.arc(x,hy+12,5,.2,2.9)}
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawMar(x,y,ph,bob,happy,sad,t){
+  const INK='#24103f';
+  ctx.fillStyle='rgba(0,0,0,.3)';ctx.beginPath();ctx.ellipse(x,PY+36,28,8,0,0,6.3);ctx.fill();
+  ctx.lineCap='round';ctx.lineWidth=10;
+  ctx.strokeStyle='#ffc400';ctx.beginPath();ctx.moveTo(x-9,y+8);ctx.lineTo(x-9+ph*7,y+31);ctx.stroke();
+  ctx.strokeStyle='#e6007e';ctx.beginPath();ctx.moveTo(x+9,y+8);ctx.lineTo(x+9-ph*7,y+31);ctx.stroke();
+  ctx.fillStyle=INK;ctx.beginPath();ctx.ellipse(x-9+ph*7,y+35,11,5,0,0,6.3);ctx.ellipse(x+9-ph*7,y+35,11,5,0,0,6.3);ctx.fill();
+  const ay=happy?-48:(sad?-6:-18-ph*9),by=happy?-48:(sad?-6:-18+ph*9);
+  ctx.strokeStyle='#00b3c4';ctx.lineWidth=10;
+  ctx.beginPath();ctx.moveTo(x-18,y-20+bob);ctx.lineTo(x-38,y+ay+bob);ctx.moveTo(x+18,y-20+bob);ctx.lineTo(x+38,y+by+bob);ctx.stroke();
+  ctx.fillStyle='#fff';ctx.strokeStyle=INK;ctx.lineWidth=2.5;
+  ctx.beginPath();ctx.arc(x-38,y+ay+bob,7,0,6.3);ctx.fill();ctx.stroke();ctx.beginPath();ctx.arc(x+38,y+by+bob,7,0,6.3);ctx.fill();ctx.stroke();
+  ctx.fillStyle='#00b3c4';ctx.beginPath();ctx.moveTo(x-17,y-30+bob);ctx.lineTo(x+17,y-30+bob);ctx.lineTo(x+30,y+16+bob);ctx.lineTo(x-30,y+16+bob);ctx.closePath();ctx.fill();ctx.stroke();
+  [[-11,-18,'#ffc400'],[8,-10,'#e6007e'],[-3,4,'#ff6a13'],[16,8,'#ffc400'],[-20,8,'#e6007e'],[2,-24,'#e6007e']].forEach(d=>{ctx.fillStyle=d[2];ctx.beginPath();ctx.arc(x+d[0],y+d[1]+bob,4.2,0,6.3);ctx.fill()});
+  ctx.fillStyle='#fff';ctx.lineWidth=2;for(let i=-2;i<=2;i++){ctx.beginPath();ctx.arc(x+i*7,y-30+Math.abs(i)*1.5+bob,5,0,6.3);ctx.fill();ctx.stroke()}
+  const hy=y-48+bob;
+  ctx.lineWidth=2.5;ctx.fillStyle='#ff6a13';
+  [-1,1].forEach(s=>{ctx.save();ctx.translate(x+s*17,hy+6);ctx.rotate(s*(.3+Math.sin(t*8)*.05));ctx.beginPath();ctx.ellipse(0,0,8,14,0,0,6.3);ctx.fill();ctx.stroke();ctx.restore()});
+  ctx.fillStyle='#f6c9a0';ctx.beginPath();ctx.arc(x,hy+6,15,0,6.3);ctx.fill();ctx.stroke();
+  const apx=x+5+Math.sin(t*7)*4,apy=hy-38,lx=x-15,rx=x+15,by0=hy-2;
+  ctx.fillStyle='#e6007e';ctx.beginPath();ctx.moveTo(lx,by0);ctx.lineTo(apx,apy);ctx.lineTo(rx,by0);ctx.closePath();ctx.fill();ctx.stroke();
+  const L=u=>[lx+(apx-lx)*u,by0+(apy-by0)*u],R=u=>[rx+(apx-rx)*u,by0+(apy-by0)*u];
+  ctx.fillStyle='#ffc400';ctx.beginPath();const a1=L(.35),a2=L(.62),b2=R(.62),b1=R(.35);ctx.moveTo(a1[0],a1[1]);ctx.lineTo(a2[0],a2[1]);ctx.lineTo(b2[0],b2[1]);ctx.lineTo(b1[0],b1[1]);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#ffc400';ctx.beginPath();ctx.arc(apx,apy,5,0,6.3);ctx.fill();ctx.stroke();
+  ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(x-6,hy+3,5,0,6.3);ctx.arc(x+6,hy+3,5,0,6.3);ctx.fill();ctx.lineWidth=1.8;ctx.stroke();
+  ctx.fillStyle=INK;ctx.beginPath();ctx.arc(x-6,hy+3.5,2.1,0,6.3);ctx.arc(x+6,hy+3.5,2.1,0,6.3);ctx.fill();
+  ctx.strokeStyle=INK;ctx.lineWidth=2.5;ctx.beginPath();
+  if(sad){ctx.arc(x,hy+24,8,3.6,5.8)}else{ctx.arc(x,hy+11,9,.35,2.8)}
+  ctx.stroke();
+  ctx.fillStyle='#ff6a13';ctx.beginPath();ctx.ellipse(x,hy+14,4.5,11,0,0,6.3);ctx.fill();ctx.stroke();
+  ctx.fillStyle='rgba(255,255,255,.55)';ctx.beginPath();ctx.ellipse(x-1.5,hy+11,1.4,5,0,0,6.3);ctx.fill();
+  ctx.fillStyle='#e6007e';ctx.beginPath();ctx.arc(x,hy+26,5.5,0,6.3);ctx.fill();ctx.stroke();
+}
+function drawFlags(){
+  ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(0,3);ctx.lineTo(W,3);ctx.stroke();
+  for(let i=0;i<16;i++){ctx.fillStyle=PAL[i%5];ctx.beginPath();ctx.moveTo(i*25+2,3);ctx.lineTo(i*25+23,3);ctx.lineTo(i*25+12.5,22+Math.sin(G.time*3+i)*2);ctx.closePath();ctx.fill()}
+}
+
+/* ---------- resultados ---------- */
+function showResult(win){
+  stopLoop();
+  const total=GATES.length,answered=G.answers.length,right=G.answers.filter(a=>a.ok).length;
+  const hitsN=Object.values(G.hits).reduce((a,b)=>a+b,0);
+  const pts=G.score+Math.max(0,G.luces)*50;
+  const pct=(right/total*.7+Math.max(0,1-hitsN/6)*.3)*100;
+  const rank=pct>=85?'Guardián del Carnaval seguro':(pct>=65?'Bailarín seguro':'Aprendiz de comparsa');
+  const msg=pct>=85?'Reconoces los riesgos y sabes cómo actuar. Cuéntaselo a tu familia y a tus amigos.':(pct>=65?'Vas muy bien. Repasa los puntos de abajo y vuelve a bailar para subir de rango.':'Ya diste el primer paso. Repasa lo que se te pasó y vuelve a intentarlo.');
+  const name=S.name||'Bailarín';
+  const rows=G.order.map((it,i)=>{const a=G.answers.find(x=>x.gi===i);
+    if(!a)return `<li><details><summary><span class="chip miss">No llegaste</span>${it.g.n}</summary><p>${it.g.e}</p></details></li>`;
+    return `<li><details ${a.ok?'':'open'}><summary><span class="chip ${a.ok?'ok':'miss'}">${a.ok?'Acertaste':'A repasar'}</span>${it.g.n}</summary><p><b>Lo seguro:</b> ${it.g.o[it.g.c]}.</p><p>${it.g.e}</p></details></li>`}).join('');
+  const hz=Object.keys(G.hits).map(k=>`<li><b>${HAZ[k].name}</b> (${G.hits[k]}): ${HAZ[k].msg}</li>`).join('');
+  const text=`Soy ${name} y saqué el rango "${rank}" en Carnaval sin sustos: ${right} de ${total} paradas acertadas, ${hitsN} chispazos y ${G.bulbs} bombillos.`;
+  const head=win?`<div class="diploma">${chispa('chispa')}<p class="small">Diploma de seguridad eléctrica</p><p class="small">Se otorga a</p><div class="name">${esc(name)}</div>
+    <div class="rank">${rank}</div><p>${msg}</p>
+    <div class="stats"><div><b>${right} de ${total}</b><span>paradas</span></div><div><b>${hitsN}</b><span>chispazos</span></div><div><b>${pts}</b><span>puntos</span></div></div>
+    <p class="small">Modo ${MODES[S.mode].label}${G.retries?' · Apagones superados: '+G.retries:''}</p></div>`
+   :`<div class="card"><h2>¡Se fueron las luces!</h2><p style="margin-top:8px">Llegaste hasta la parada ${Math.min(G.gi+1,total)} de ${total}. En la calle real, la mejor forma de no apagar las luces es alejarse de los riesgos. Puedes seguir desde esta parada con todas tus luces.</p>
+    <div class="stats"><div><b>${right} de ${answered}</b><span>acertadas</span></div><div><b>${hitsN}</b><span>chispazos</span></div><div><b>${G.bulbs}</b><span>bombillos</span></div></div></div>`;
+  show(`<section class="result">${head}
+  <h3 class="sec">Repaso de las paradas</h3><ul class="review">${rows}</ul>
+  ${hz?`<h3 class="sec">Tus chispazos en la calle</h3><ul class="panel-w" style="margin:0;padding-left:34px">${hz}</ul>`:''}
+  <div class="btn-row">${win?'':`<button class="btn" id="resume" type="button">Seguir desde la parada ${Math.min(G.gi+1,total)}</button>`}<button class="btn ${win?'':'btn-alt'}" id="again" type="button">${win?'Bailar de nuevo':'Empezar de cero'}</button>${win?'<button class="btn btn-alt" id="copy" type="button">Copiar mi resultado</button>':''}<button class="btn btn-alt" id="home" type="button">Inicio</button></div>
+  <div id="copyOut" aria-live="polite"></div>
+  <p class="foot">Mensaje clave: si ves un riesgo eléctrico, no lo toques, aléjate y avisa a un adulto. En una emergencia en Colombia, llama al 123.</p></section>`);
+  $('#again').addEventListener('click',()=>startGame());
+  const rs=$('#resume');if(rs)rs.addEventListener('click',()=>startGame({gi:G.gi,answers:G.answers,hits:G.hits,score:G.score,bulbs:G.bulbs,retries:G.retries}));
+  $('#home').addEventListener('click',()=>CS.home());
+  const cp=$('#copy');
+  if(cp)cp.addEventListener('click',async()=>{
+    const out=$('#copyOut');
+    try{await navigator.clipboard.writeText(text);out.innerHTML='<p class="copymsg">Resultado copiado.</p>'}
+    catch(e){out.innerHTML=`<textarea class="copybox" readonly id="ctext">${esc(text)}</textarea>`;const t=$('#ctext');t.focus();t.select()}
+  });
+}
+
+
+window.CS_G2={start:showStart,stop:function(){stopLoop();G=null;cv=null;sheet.hidden=true;sheetCb=null}};
+})();
+
+(function(){
+'use strict';
+const CS=window.CS={name:'',mode:'explorer',muted:false};
+const screen=document.getElementById('screen'),home=document.getElementById('homeBtn'),snd=document.getElementById('soundBtn');
+function theme(t){document.body.setAttribute('data-theme',t);home.hidden=(t==='hub')}
+const bolt='<svg viewBox="0 0 120 120" aria-hidden="true"><path d="M60 8L112 100H8Z" fill="#ffd21f" stroke="#12203f" stroke-width="7" stroke-linejoin="round"/><path d="M66 38L46 68h14l-6 22 24-34H64Z" fill="#12203f"/></svg>';
+const carn='<svg viewBox="0 0 160 200" aria-hidden="true"><use href="#chispa"/></svg>';
+CS.home=function(){
+  if(window.CS_G1)CS_G1.stop();if(window.CS_G2)CS_G2.stop();
+  theme('hub');
+  screen.innerHTML=`<section class="hub">
+  <p class="kicker">Juegos de seguridad eléctrica</p>
+  <h1>¡Que no se te <span>vayan las luces!</span></h1>
+  <p class="lead">Elige una actividad. Las dos enseñan a reconocer los riesgos eléctricos y a actuar con seguridad en la casa, la calle y la escuela.</p>
+  <div class="hubgrid">
+    <article class="hubcard a1"><div class="strip" aria-hidden="true"></div><div class="body"><span class="num">Actividad 1</span><div class="art">${carn}</div>
+      <h2>Carnaval sin sustos</h2><p>Baila por el desfile, esquiva cables peligrosos, recoge bombillos y decide qué hacer en 8 paradas.</p>
+      <ul><li>Correr y decidir</li><li>8 paradas</li><li>Niños y adolescentes</li></ul>
+      <button class="hbtn" type="button" data-play="2">Jugar</button></div></article>
+    <article class="hubcard a2"><div class="strip" aria-hidden="true"></div><div class="body"><span class="num">Actividad 2</span><div class="art">${bolt}</div>
+      <h2>Busca los riesgos</h2><p>Recorre una casa, una calle y una escuela y encuentra los riesgos eléctricos antes de que se acabe el tiempo.</p>
+      <ul><li>Buscar y aprender</li><li>3 escenarios</li><li>10 preguntas</li></ul>
+      <button class="hbtn" type="button" data-play="1">Jugar</button></div></article>
+  </div>
+  <p class="foot">Inspirado en la campaña “Que no se te vayan las luces” del CIDET, la Universidad del Norte y el grupo IEEE. En una emergencia en Colombia, llama al 123.</p>
+  </section>`;
+  screen.querySelectorAll('[data-play]').forEach(b=>b.addEventListener('click',()=>{const n=b.getAttribute('data-play');theme('g'+n);window['CS_G'+n].start()}));
+  window.scrollTo(0,0);
+};
+home.addEventListener('click',CS.home);
+snd.addEventListener('click',()=>{CS.muted=!CS.muted;snd.textContent='Sonido: '+(CS.muted?'no':'sí');snd.setAttribute('aria-pressed',String(CS.muted))});
+try{window.claude&&window.claude.hot&&window.claude.hot.snapshot&&window.claude.hot.snapshot(()=>({name:CS.name,mode:CS.mode}))}catch(e){}
+function boot(d){d=d||{};if(typeof d.name==='string')CS.name=d.name;if(d.mode==='explorer'||d.mode==='engineer')CS.mode=d.mode;CS.home()}
+if(window.claude&&window.claude.hot&&window.claude.hot.ready)window.claude.hot.ready(boot);else boot((window.claude&&window.claude.hot&&window.claude.hot.data)||{});
+})();
+
+</script>
+</body>
+</html>
